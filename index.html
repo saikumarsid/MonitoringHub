@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DAZN SES Engineering – Monitoring Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg-primary:#0d0f14;--bg-secondary:#13161e;--bg-card:#1a1e2a;
+  --bg-card-hover:#1f2435;--border:#2a2f42;--border-hover:#3d4460;
+  --text-primary:#e8eaf0;--text-secondary:#8b90a8;--text-muted:#555c78;
+  --accent-dazn:#f5a623;--accent-blue:#4a9eff;--accent-green:#3ecf8e;
+  --accent-purple:#a78bfa;--accent-red:#f87171;--accent-cyan:#22d3ee;
+  --accent-orange:#fb923c;--accent-pink:#f472b6;--accent-yellow:#facc15;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.4);--shadow-md:0 4px 20px rgba(0,0,0,.5);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.7);
+  --r-sm:8px;--r-md:12px;--tr:all .22s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="light"]{
+  --bg-primary:#f0f2f8;--bg-secondary:#e4e7f0;--bg-card:#fff;
+  --bg-card-hover:#f7f8fc;--border:#d1d5e8;--border-hover:#a0a8c8;
+  --text-primary:#1a1e2a;--text-secondary:#4a5070;--text-muted:#8890b0;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.08);--shadow-md:0 4px 20px rgba(0,0,0,.1);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;line-height:1.6;transition:background .3s,color .3s}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg-primary)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
+
+/* TOP NAV */
+.topnav{position:sticky;top:0;z-index:300;background:var(--bg-secondary);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);}
+.nav-brand{display:flex;align-items:center;gap:12px}
+.nav-logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a623,#e8920a);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#000;box-shadow:0 0 18px rgba(245,166,35,.4);flex-shrink:0;}
+.nav-title{font-size:15px;font-weight:700;color:var(--text-primary);letter-spacing:-.3px}
+.nav-subtitle{font-size:11px;color:var(--text-muted)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.live-badge{display:flex;align-items:center;gap:6px;background:rgba(62,207,142,.1);border:1px solid rgba(62,207,142,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent-green);letter-spacing:.6px;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-green);animation:pdot 1.8s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
+.clock{font-size:12px;font-weight:600;color:var(--text-secondary);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
+.theme-btn{width:36px;height:36px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:var(--tr);}
+.theme-btn:hover{background:var(--bg-card-hover);border-color:var(--border-hover)}
+
+/* TAB NAV */
+.tab-nav{display:flex;align-items:center;gap:4px;background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0 28px;}
+.tab-btn{display:flex;align-items:center;gap:7px;padding:12px 18px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:var(--tr);white-space:nowrap;}
+.tab-btn:hover{color:var(--text-primary)}
+.tab-btn.active{color:var(--accent-blue);border-bottom-color:var(--accent-blue);}
+.tab-btn .tab-icon{font-size:15px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 110px)}
+.sidebar{width:215px;flex-shrink:0;background:var(--bg-secondary);border-right:1px solid var(--border);padding:18px 10px;position:sticky;top:110px;height:calc(100vh - 110px);overflow-y:auto;}
+.sb-label{font-size:10px;font-weight:700;letter-spacing:1.3px;color:var(--text-muted);text-transform:uppercase;padding:0 8px;margin-bottom:6px;margin-top:18px;}
+.sb-label:first-child{margin-top:0}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r-sm);font-size:12.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:var(--tr);border:1px solid transparent;text-decoration:none;}
+.sb-item:hover{background:var(--bg-card);color:var(--text-primary);border-color:var(--border)}
+.sb-item.active{background:var(--bg-card);color:var(--text-primary);border-color:var(--border-hover)}
+.sb-icon{font-size:14px;width:18px;text-align:center}
+.sb-count{margin-left:auto;font-size:10px;font-weight:700;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;padding:1px 6px;color:var(--text-muted);}
+.main{flex:1;padding:26px 30px;overflow-x:hidden}
+
+/* MONITORING SHARED */
+.page-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.page-header h1{font-size:22px;font-weight:800;color:var(--text-primary);letter-spacing:-.5px}
+.page-header p{font-size:12.5px;color:var(--text-secondary);margin-top:4px}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 14px;min-width:230px;transition:var(--tr);}
+.search-wrap:focus-within{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
+.search-wrap input{background:none;border:none;outline:none;font-size:13px;color:var(--text-primary);width:100%;font-family:inherit;}
+.search-wrap input::placeholder{color:var(--text-muted)}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:26px;}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;display:flex;align-items:center;gap:12px;transition:var(--tr);}
+.stat-card:hover{border-color:var(--border-hover);transform:translateY(-1px)}
+.stat-ico{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.stat-val{font-size:21px;font-weight:800;color:var(--text-primary);line-height:1}
+.stat-lbl{font-size:10.5px;color:var(--text-muted);margin-top:3px;font-weight:500}
+.notice{background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.22);border-radius:var(--r-md);padding:11px 16px;font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:10px;margin-bottom:26px;}
+.section{margin-bottom:34px}
+.sec-header{display:flex;align-items:center;gap:11px;margin-bottom:14px;padding-bottom:11px;border-bottom:1px solid var(--border);}
+.sec-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.sec-title{font-size:15px;font-weight:700;color:var(--text-primary)}
+.sec-desc{font-size:11.5px;color:var(--text-muted);margin-top:2px}
+.sec-badge{margin-left:auto;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:17px;display:flex;flex-direction:column;gap:9px;transition:var(--tr);position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ca,var(--accent-blue));opacity:0;transition:var(--tr);}
+.card:hover{background:var(--bg-card-hover);border-color:var(--border-hover);transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.card:hover::before{opacity:1}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-ico{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;background:var(--ci,rgba(74,158,255,.12));}
+.card-tag{font-size:9.5px;font-weight:700;letter-spacing:.5px;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.tag-live{background:rgba(62,207,142,.14);color:var(--accent-green);border:1px solid rgba(62,207,142,.28)}
+.tag-mon{background:rgba(74,158,255,.14);color:var(--accent-blue);border:1px solid rgba(74,158,255,.28)}
+.tag-dbg{background:rgba(167,139,250,.14);color:var(--accent-purple);border:1px solid rgba(167,139,250,.28)}
+.tag-aws{background:rgba(245,166,35,.14);color:var(--accent-dazn);border:1px solid rgba(245,166,35,.28)}
+.tag-dr{background:rgba(248,113,113,.14);color:var(--accent-red);border:1px solid rgba(248,113,113,.28)}
+.tag-new{background:rgba(34,211,238,.14);color:var(--accent-cyan);border:1px solid rgba(34,211,238,.28)}
+.card-name{font-size:13.5px;font-weight:700;color:var(--text-primary);line-height:1.3}
+.card-desc{font-size:11px;color:var(--text-secondary);line-height:1.5;flex:1}
+.btn{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--ca,var(--accent-blue));padding:6px 12px;border-radius:6px;background:var(--cb,rgba(74,158,255,.08));border:1px solid var(--cc,rgba(74,158,255,.2));transition:var(--tr);align-self:flex-start;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;}
+.btn:hover{background:var(--ca,var(--accent-blue));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(74,158,255,.28)}
+.btn-row{display:flex;flex-wrap:wrap;gap:5px}
+.btn-sm{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--ca,var(--accent-blue));padding:4px 9px;border-radius:5px;background:var(--cb,rgba(74,158,255,.08));border:1px solid var(--cc,rgba(74,158,255,.2));transition:var(--tr);text-transform:uppercase;letter-spacing:.3px;cursor:pointer;}
+.btn-sm:hover{background:var(--ca,var(--accent-blue));color:#fff;border-color:transparent}
+.add-tool-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--bg-card);border:2px dashed var(--border);border-radius:var(--r-md);padding:17px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:var(--tr);min-height:120px;}
+.add-tool-btn:hover{border-color:var(--accent-blue);color:var(--accent-blue);background:rgba(74,158,255,.05);transform:translateY(-2px);}
+.add-tool-btn span{font-size:20px}
+.t-blue{--ca:var(--accent-blue);--ci:rgba(74,158,255,.12);--cb:rgba(74,158,255,.08);--cc:rgba(74,158,255,.22)}
+.t-green{--ca:var(--accent-green);--ci:rgba(62,207,142,.12);--cb:rgba(62,207,142,.08);--cc:rgba(62,207,142,.22)}
+.t-purple{--ca:var(--accent-purple);--ci:rgba(167,139,250,.12);--cb:rgba(167,139,250,.08);--cc:rgba(167,139,250,.22)}
+.t-orange{--ca:var(--accent-orange);--ci:rgba(251,146,60,.12);--cb:rgba(251,146,60,.08);--cc:rgba(251,146,60,.22)}
+.t-cyan{--ca:var(--accent-cyan);--ci:rgba(34,211,238,.12);--cb:rgba(34,211,238,.08);--cc:rgba(34,211,238,.22)}
+.t-pink{--ca:var(--accent-pink);--ci:rgba(244,114,182,.12);--cb:rgba(244,114,182,.08);--cc:rgba(244,114,182,.22)}
+.t-dazn{--ca:var(--accent-dazn);--ci:rgba(245,166,35,.12);--cb:rgba(245,166,35,.08);--cc:rgba(245,166,35,.22)}
+.t-red{--ca:var(--accent-red);--ci:rgba(248,113,113,.12);--cb:rgba(248,113,113,.08);--cc:rgba(248,113,113,.22)}
+.t-yellow{--ca:var(--accent-yellow);--ci:rgba(250,204,21,.12);--cb:rgba(250,204,21,.08);--cc:rgba(250,204,21,.22)}
+.si-blue .sec-ico{background:rgba(74,158,255,.14)}
+.si-green .sec-ico{background:rgba(62,207,142,.14)}
+.si-purple .sec-ico{background:rgba(167,139,250,.14)}
+.si-orange .sec-ico{background:rgba(251,146,60,.14)}
+.si-cyan .sec-ico{background:rgba(34,211,238,.14)}
+.si-pink .sec-ico{background:rgba(244,114,182,.14)}
+.si-dazn .sec-ico{background:rgba(245,166,35,.14)}
+.si-red .sec-ico{background:rgba(248,113,113,.14)}
+.si-yellow .sec-ico{background:rgba(250,204,21,.14)}
+.b-blue{background:rgba(74,158,255,.14);color:var(--accent-blue);border:1px solid rgba(74,158,255,.28)}
+.b-green{background:rgba(62,207,142,.14);color:var(--accent-green);border:1px solid rgba(62,207,142,.28)}
+.b-purple{background:rgba(167,139,250,.14);color:var(--accent-purple);border:1px solid rgba(167,139,250,.28)}
+.b-orange{background:rgba(251,146,60,.14);color:var(--accent-orange);border:1px solid rgba(251,146,60,.28)}
+.b-cyan{background:rgba(34,211,238,.14);color:var(--accent-cyan);border:1px solid rgba(34,211,238,.28)}
+.b-pink{background:rgba(244,114,182,.14);color:var(--accent-pink);border:1px solid rgba(244,114,182,.28)}
+.b-dazn{background:rgba(245,166,35,.14);color:var(--accent-dazn);border:1px solid rgba(245,166,35,.28)}
+.b-red{background:rgba(248,113,113,.14);color:var(--accent-red);border:1px solid rgba(248,113,113,.28)}
+.b-yellow{background:rgba(250,204,21,.14);color:var(--accent-yellow);border:1px solid rgba(250,204,21,.28)}
+.divider{height:1px;background:var(--border);margin:30px 0}
+.footer{text-align:center;padding:22px 30px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-muted);}
+.footer span{color:var(--accent-dazn);font-weight:600}
+.anchor{scroll-margin-top:120px}
+.hidden{display:none!important}
+
+/* ADD TOOL MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg-card);border:1px solid var(--border-hover);border-radius:var(--r-md);padding:28px;width:100%;max-width:480px;box-shadow:var(--shadow-lg);transform:translateY(20px);transition:transform .25s;max-height:90vh;overflow-y:auto;}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-title{font-size:16px;font-weight:800;color:var(--text-primary);margin-bottom:6px}
+.modal-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:11.5px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.modal-field input,.modal-field select,.modal-field textarea{width:100%;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;color:var(--text-primary);font-family:inherit;outline:none;transition:var(--tr);}
+.modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
+.modal-field textarea{resize:vertical;min-height:70px}
+.modal-field select option{background:var(--bg-card)}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.modal-cancel{padding:8px 18px;border-radius:6px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;transition:var(--tr);}
+.modal-cancel:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.modal-save{padding:8px 18px;border-radius:6px;background:var(--accent-blue);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr);}
+.modal-save:hover{background:#3a8eef;box-shadow:0 4px 12px rgba(74,158,255,.35)}
+
+/* ═══════════════════════════════════════════
+   PLAYBACK TAB
+═══════════════════════════════════════════ */
+.pb-wrap{padding:24px 28px;min-height:calc(100vh - 110px);background:var(--bg-primary);}
+.pb-control-panel{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-md);padding:20px 24px;margin-bottom:20px;}
+.pb-control-title{font-size:14px;font-weight:800;color:var(--text-primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.pb-control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:16px;}
+.pb-field{display:flex;flex-direction:column;gap:5px;}
+.pb-field label{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;}
+.pb-field select,.pb-field input[type=text],.pb-field input[type=number]{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;font-size:13px;color:var(--text-primary);font-family:inherit;outline:none;transition:var(--tr);width:100%;}
+.pb-field select:focus,.pb-field input:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
+.pb-field select option{background:var(--bg-card)}
+.pb-textarea-wrap{margin-bottom:16px;}
+.pb-textarea-wrap label{display:block;font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+.pb-textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;font-size:12.5px;color:var(--text-primary);font-family:'Courier New',monospace;outline:none;resize:vertical;min-height:120px;transition:var(--tr);line-height:1.8;}
+.pb-textarea:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(74,158,255,.12)}
+.pb-textarea::placeholder{color:var(--text-muted)}
+.pb-toggle-row{display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:16px;}
+.pb-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text-secondary);user-select:none;}
+.pb-toggle input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent-blue);cursor:pointer;}
+.pb-toggle:hover{color:var(--text-primary)}
+
+/* Suppressed indicator */
+.suppressed-indicator{display:none;align-items:center;gap:8px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);border-radius:var(--r-sm);padding:8px 14px;font-size:12px;font-weight:600;color:var(--accent-orange);margin-bottom:14px;}
+.suppressed-indicator.visible{display:flex;}
+
+/* Action Buttons */
+.pb-action-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.pb-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr);border:none;letter-spacing:.3px;white-space:nowrap;}
+.pb-btn-primary{background:linear-gradient(135deg,var(--accent-blue),#3a8eef);color:#fff;box-shadow:0 4px 14px rgba(74,158,255,.3);}
+.pb-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(74,158,255,.4);}
+.pb-btn-green{background:linear-gradient(135deg,var(--accent-green),#2db87a);color:#fff;box-shadow:0 4px 14px rgba(62,207,142,.3);}
+.pb-btn-green:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(62,207,142,.4);}
+.pb-btn-orange{background:linear-gradient(135deg,var(--accent-orange),#e8820a);color:#fff;box-shadow:0 4px 14px rgba(251,146,60,.3);}
+.pb-btn-orange:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(251,146,60,.4);}
+.pb-btn-ghost{background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border);}
+.pb-btn-ghost:hover{border-color:var(--border-hover);color:var(--text-primary);background:var(--bg-card-hover);}
+.pb-btn-red{background:linear-gradient(135deg,var(--accent-red),#e05555);color:#fff;}
+.pb-btn-red:hover{transform:translateY(-1px);}
+.pb-btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+
+/* URL Table */
+.pb-table-wrap{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:20px;overflow:hidden;}
+.pb-table-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
+.pb-table-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px;}
+.pb-table-actions{display:flex;gap:8px;}
+.pb-table{width:100%;border-collapse:collapse;font-size:12px;}
+.pb-table thead tr{background:var(--bg-card);}
+.pb-table th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);}
+.pb-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-secondary);vertical-align:middle;}
+.pb-table tr:last-child td{border-bottom:none}
+.pb-table tr:hover td{background:var(--bg-card-hover)}
+.pb-url-cell{font-family:'Courier New',monospace;font-size:11px;color:var(--accent-blue);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+.pb-url-cell:hover{text-decoration:underline}
+.status-ready{display:inline-flex;align-items:center;gap:5px;background:rgba(62,207,142,.14);color:var(--accent-green);border:1px solid rgba(62,207,142,.28);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;}
+.status-error{display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,.14);color:var(--accent-red);border:1px solid rgba(248,113,113,.28);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;}
+.status-loading{display:inline-flex;align-items:center;gap:5px;background:rgba(245,166,35,.14);color:var(--accent-dazn);border:1px solid rgba(245,166,35,.28);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;}
+
+/* Multiview Controls Bar */
+.pb-mv-controls{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;}
+.pb-mv-ctrl-group{display:flex;align-items:center;gap:7px;}
+.pb-mv-ctrl-group label{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.pb-mv-ctrl-group select,.pb-mv-ctrl-group input[type=number]{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text-primary);font-family:inherit;outline:none;width:75px;}
+.pb-mv-ctrl-group select:focus,.pb-mv-ctrl-group input[type=number]:focus{border-color:var(--accent-blue);}
+.pb-mv-divider{width:1px;height:28px;background:var(--border);flex-shrink:0;}
+.utc-clock{font-size:13px;font-weight:700;color:var(--accent-cyan);font-variant-numeric:tabular-nums;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:6px;padding:5px 12px;letter-spacing:.5px;white-space:nowrap;}
+
+/* Playback Grid — dynamic rows×cols via CSS variables */
+.pb-grid{display:grid;gap:10px;transition:var(--tr);}
+
+/* Playback Tile */
+.pb-tile{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--r-md);overflow:hidden;transition:border-color .4s,box-shadow .4s;position:relative;cursor:grab;}
+.pb-tile:active{cursor:grabbing}
+.pb-tile.health-good{border-color:var(--accent-green);box-shadow:0 0 16px rgba(62,207,142,.25);}
+.pb-tile.health-bad{border-color:var(--accent-red);box-shadow:0 0 16px rgba(248,113,113,.25);}
+.pb-tile.health-loading{border-color:var(--accent-dazn);box-shadow:0 0 16px rgba(245,166,35,.15);}
+.pb-tile.pinned{outline:2px solid var(--accent-purple);outline-offset:2px;}
+.pb-tile-header{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(0,0,0,.35);border-bottom:1px solid var(--border);gap:6px;}
+.pb-tile-title{font-size:11px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pb-tile-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0;}
+.badge-hls{background:rgba(62,207,142,.2);color:var(--accent-green);border:1px solid rgba(62,207,142,.3);}
+.badge-dash{background:rgba(74,158,255,.2);color:var(--accent-blue);border:1px solid rgba(74,158,255,.3);}
+.badge-smooth{background:rgba(167,139,250,.2);color:var(--accent-purple);border:1px solid rgba(167,139,250,.3);}
+.badge-sup{background:rgba(251,146,60,.2);color:var(--accent-orange);border:1px solid rgba(251,146,60,.3);}
+.pb-tile-controls{display:flex;align-items:center;gap:3px;flex-shrink:0;}
+.pb-tile-btn{width:24px;height:24px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:var(--tr);color:var(--text-secondary);}
+.pb-tile-btn:hover{background:rgba(255,255,255,.16);color:var(--text-primary);}
+
+/* Video wrapper — aspect ratio box */
+.pb-tile-video-wrap{position:relative;width:100%;background:#000;overflow:hidden;}
+.pb-tile-video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;}
+.pb-tile-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#0a0c10,#1a1e2a);}
+.pb-tile-placeholder-icon{font-size:28px;opacity:.4;}
+.pb-tile-placeholder-text{font-size:10.5px;color:var(--text-muted);text-align:center;padding:0 10px;line-height:1.5;}
+.pb-tile-footer{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:rgba(0,0,0,.25);}
+.pb-tile-status{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;}
+.pb-tile-status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-green{background:var(--accent-green);box-shadow:0 0 5px var(--accent-green);}
+.dot-red{background:var(--accent-red);box-shadow:0 0 5px var(--accent-red);}
+.dot-yellow{background:var(--accent-dazn);box-shadow:0 0 5px var(--accent-dazn);animation:pdot 1.2s ease-in-out infinite;}
+.pb-tile-meta{font-size:10px;color:var(--text-muted);display:flex;align-items:center;gap:6px;}
+.pb-tile-latency{font-size:10px;font-weight:600;color:var(--accent-cyan);}
+.pb-tile-health-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--accent-green);transition:background .5s;}
+.pb-tile-health-bar.bad{background:var(--accent-red);}
+.pb-tile-health-bar.loading{background:var(--accent-dazn);animation:hbpulse 1s ease-in-out infinite;}
+@keyframes hbpulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* Share box */
+.share-box{background:var(--bg-secondary);border:1px solid rgba(62,207,142,.3);border-radius:var(--r-md);padding:18px 20px;margin-bottom:20px;}
+.share-box-title{font-size:13px;font-weight:700;color:var(--accent-green);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.share-url-row{display:flex;gap:8px;}
+.share-url-input{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 12px;font-size:11.5px;color:var(--accent-blue);font-family:'Courier New',monospace;outline:none;min-width:0;}
+.copy-btn{padding:9px 16px;border-radius:var(--r-sm);background:var(--accent-green);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:var(--tr);white-space:nowrap;}
+.copy-btn:hover{background:#2db87a;}
+
+/* Empty state */
+.pb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;gap:14px;text-align:center;grid-column:1/-1;}
+.pb-empty-icon{font-size:52px;opacity:.25;}
+.pb-empty-title{font-size:16px;font-weight:700;color:var(--text-secondary);}
+.pb-empty-sub{font-size:12.5px;color:var(--text-muted);max-width:400px;line-height:1.7;}
+
+/* Responsive */
+@media(max-width:900px){.sidebar{display:none}.main{padding:18px 14px}.pb-wrap{padding:14px 12px}}
+@media(max-width:600px){.topnav{padding:0 14px}.nav-subtitle{display:none}.stats-bar{grid-template-columns:1fr 1fr}.page-header{flex-direction:column}.search-wrap{min-width:unset;width:100%}.tab-btn{padding:10px 10px;font-size:11px}.pb-control-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="nav-brand">
+    <div class="nav-logo">DZ</div>
+    <div>
+      <div class="nav-title">DAZN Monitoring Hub</div>
+      <div class="nav-subtitle">SES Engineering · Headend Operations</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <div class="clock" id="clock">--:--:--</div>
+    <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+  </div>
+</nav>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('monitoring',this)">
+    <span class="tab-icon">🖥️</span> Monitoring Hub
+  </button>
+  <button class="tab-btn" onclick="switchTab('playback',this)">
+    <span class="tab-icon">▶️</span> Playback Dashboard
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 1 — MONITORING HUB (UNCHANGED)
+═══════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-monitoring">
+<div class="layout">
+<aside class="sidebar">
+  <div class="sb-label">Main Platforms</div>
+  <a href="#m2a"       class="sb-item active"><span class="sb-icon">📡</span>M2A<span class="sb-count">8</span></a>
+  <a href="#mk-linear" class="sb-item"><span class="sb-icon">📺</span>MK Linear<span class="sb-count">5</span></a>
+  <a href="#mk-dcg"    class="sb-item"><span class="sb-icon">🎛️</span>MK DCG<span class="sb-count">5</span></a>
+  <a href="#amagi"     class="sb-item"><span class="sb-icon">☁️</span>Amagi<span class="sb-count">2</span></a>
+  <a href="#id3as"     class="sb-item"><span class="sb-icon">🔬</span>ID3AS<span class="sb-count">4</span></a>
+  <div class="sb-label">Debugging &amp; Monitoring</div>
+  <a href="#conviva"   class="sb-item"><span class="sb-icon">📊</span>Conviva<span class="sb-count">2</span></a>
+  <a href="#newrelic"  class="sb-item"><span class="sb-icon">🔍</span>New Relic<span class="sb-count">1</span></a>
+  <a href="#coralogix" class="sb-item"><span class="sb-icon">📈</span>Coralogix<span class="sb-count">2</span></a>
+  <a href="#streams"   class="sb-item"><span class="sb-icon">🎬</span>Stream Tools<span class="sb-count">3</span></a>
+  <div class="sb-label">Reference</div>
+  <a href="https://livesport.atlassian.net/wiki/spaces/SP/pages/8023277650" target="_blank" class="sb-item">
+    <span class="sb-icon">📄</span>Confluence
+  </a>
+</aside>
+<main class="main">
+  <div class="page-header">
+    <div>
+      <h1>🖥️ SES Engineering Monitoring</h1>
+      <p>Centralised quick-access dashboard · Headend platforms, probes &amp; debugging tools</p>
+    </div>
+    <div class="search-wrap">
+      <span style="color:var(--text-muted);font-size:14px">🔎</span>
+      <input type="text" id="searchInput" placeholder="Search tools…" oninput="filterCards(this.value)"/>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-ico" style="background:rgba(74,158,255,.12)">📡</div><div><div class="stat-val">5</div><div class="stat-lbl">Platforms</div></div></div>
+    <div class="stat-card"><div class="stat-ico" style="background:rgba(62,207,142,.12)">🔗</div><div><div class="stat-val" id="totalLinks">31</div><div class="stat-lbl">Total Links</div></div></div>
+    <div class="stat-card"><div class="stat-ico" style="background:rgba(167,139,250,.12)">🛠️</div><div><div class="stat-val">4</div><div class="stat-lbl">Debug Tools</div></div></div>
+    <div class="stat-card"><div class="stat-ico" style="background:rgba(245,166,35,.12)">☁️</div><div><div class="stat-val">2</div><div class="stat-lbl">AWS Regions</div></div></div>
+    <div class="stat-card"><div class="stat-ico" style="background:rgba(248,113,113,.12)">🖥️</div><div><div class="stat-val">8</div><div class="stat-lbl">Wall Screens</div></div></div>
+  </div>
+  <div class="notice">
+    <span style="font-size:15px;flex-shrink:0">💡</span>
+    <span>Chrome tabs auto-cycle every <strong>15 seconds</strong> on wall-mount screens. Use <strong>➕ Add Tool</strong> in any section to add new tools dynamically.</span>
+  </div>
+
+  <!-- M2A -->
+  <div class="section si-blue anchor" id="m2a">
+    <div class="sec-header"><div class="sec-ico">📡</div><div><div class="sec-title">M2A Media</div><div class="sec-desc">Live event delivery · DCA (Ireland eu-west-1) · DCB (Frankfurt eu-central-1)</div></div><span class="sec-badge b-blue">Screen 1</span></div>
+    <div class="grid" id="grid-m2a">
+      <div class="card t-blue" data-name="dca probe m2a probe inx"><div class="card-top"><div class="card-ico">🔭</div><span class="card-tag tag-mon">PROBE</span></div><div class="card-name">DCA-Probe</div><div class="card-desc">Real-time video stream health monitoring between AppearTV &amp; MediaConnect — Ireland (eu-west-1).</div><a href="http://10.11.233.144/probe/" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-blue" data-name="dcb probe m2a probe che"><div class="card-top"><div class="card-ico">🔭</div><span class="card-tag tag-mon">PROBE</span></div><div class="card-name">DCB-Probe</div><div class="card-desc">Real-time video stream health monitoring — Frankfurt (eu-central-1).</div><a href="http://10.111.233.144/probe/" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-cyan" data-name="txedge tx edge m2a edge"><div class="card-top"><div class="card-ico">🌐</div><span class="card-tag tag-live">EDGE</span></div><div class="card-name">TxEdge</div><div class="card-desc">Edge server health status &amp; M2A channel status monitoring via TechEx platform.</div><a href="https://dazn-edge.techex.co.uk/txedges" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-orange" data-name="dca tag dcb tag m2a tag multiview"><div class="card-top"><div class="card-ico">🏷️</div><span class="card-tag tag-live">TAG</span></div><div class="card-name">DCA-Tag &amp; DCB-Tag</div><div class="card-desc">Multiview tag screening — track &amp; supervise multiple M2A video feeds and streaming inputs.</div><div class="btn-row"><a href="http://10.11.203.34/" target="_blank" class="btn-sm">DCA ↗</a><a href="http://10.11.203.32/" target="_blank" class="btn-sm">DCB ↗</a></div></div>
+      <div class="card t-dazn" data-name="dca dcb console event multiviewer m2a media"><div class="card-top"><div class="card-ico">🎛️</div><span class="card-tag tag-live">CONSOLE</span></div><div class="card-name">DCA/B Console – Event Multiviewer</div><div class="card-desc">M2A Media consoles for all live events &amp; full event VOD — DCA Ireland &amp; DCB Frankfurt.</div><div class="btn-row"><a href="https://dazndca.m2amedia.services/console/ui/beta/live-stream/schedule/events/2025-04-08;view=grid;filter=live;tier=undefined;status=running;region=" target="_blank" class="btn-sm">DCA ↗</a><a href="https://dazndcb.m2amedia.services/console/ui/beta/live-stream/schedule/events/2025-04-08;view=grid;filter=live;tier=undefined;status=;region=" target="_blank" class="btn-sm">DCB ↗</a></div></div>
+      <div class="card t-dazn" data-name="m2a v2 console cloud m2a media"><div class="card-top"><div class="card-ico">☁️</div><span class="card-tag tag-live">V2 CONSOLE</span></div><div class="card-name">M2A V2 Console</div><div class="card-desc">Used after deploying CloudFront CDN after the Media Packager and USP.</div><a href="https://cloud.m2amedia.tv/ui/en-GB/launch" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-yellow" data-name="aws cloudwatch logs ireland frankfurt dca dcb"><div class="card-top"><div class="card-ico">☁️</div><span class="card-tag tag-aws">AWS</span></div><div class="card-name">AWS CloudWatch</div><div class="card-desc">Extract caching system behaviour &amp; performance logs — DCA Ireland &amp; DCB Frankfurt.</div><div class="btn-row"><a href="https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:logs-insights" target="_blank" class="btn-sm">DCA ↗</a><a href="https://eu-central-1.console.aws.amazon.com/cloudwatch/home?region=eu-central-1#logsV2:logs-insights" target="_blank" class="btn-sm">DCB ↗</a></div></div>
+      <div class="card t-yellow" data-name="aws asg auto scaling group ec2"><div class="card-top"><div class="card-ico">⚖️</div><span class="card-tag tag-aws">AWS ASG</span></div><div class="card-name">AWS ASG</div><div class="card-desc">Auto Scaling Groups — monitor EC2 scaling activity for M2A infrastructure in eu-west-1.</div><a href="https://eu-west-1.console.aws.amazon.com/ec2/home?region=eu-west-1#AutoScalingGroups:" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-green" data-name="m2a penalty dashboard overview dashboard screening"><div class="card-top"><div class="card-ico">📊</div><span class="card-tag tag-mon">DASHBOARD</span></div><div class="card-name">M2A Dashboards</div><div class="card-desc">Real-time visibility into live encoding, packaging &amp; CDN components. Green = healthy operations.</div><div class="btn-row"><a href="https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#dashboards/dashboard/m2a-dca-dazn-monitor-penalty-box-soc" target="_blank" class="btn-sm">Penalty ↗</a><a href="https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#dashboards/dashboard/m2a-dca-dazn-monitor-overview-soc" target="_blank" class="btn-sm">Overview ↗</a><a href="https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#dashboards?listOptions=~(filteringText~'soc~currentPageIndex~1)" target="_blank" class="btn-sm">All ↗</a></div></div>
+      <div class="add-tool-btn" onclick="openModal('m2a','t-blue')"><span>➕</span> Add Tool to M2A</div>
+    </div>
+  </div>
+
+  <!-- MK LINEAR -->
+  <div class="section si-orange anchor" id="mk-linear">
+    <div class="sec-header"><div class="sec-ico">📺</div><div><div class="sec-title">MediaKind – Linear (DCS/DCT)</div><div class="sec-desc">Linear channels 1–40 · MK Aquila LON1/LON2 · Probes · Nginx · Tags · CheckMK</div></div><span class="sec-badge b-orange">Screen 7</span></div>
+    <div class="grid" id="grid-mk-linear">
+      <div class="card t-orange" data-name="mk aquila lon1 lon2 mediakind linear aquila"><div class="card-top"><div class="card-ico">📡</div><span class="card-tag tag-live">AQUILA</span></div><div class="card-name">MK Aquila (LON1 &amp; LON2)</div><div class="card-desc">Linear channels 1–40 screening via MK Aquila — LON1 &amp; LON2 instances.</div><div class="btn-row"><a href="https://10.30.16.170:8443/ui/accounts/login/?next=/ui/services/" target="_blank" class="btn-sm">LON1 ↗</a><a href="https://10.32.16.170:8443/ui/accounts/login/?next=/ui/services/" target="_blank" class="btn-sm">LON2 ↗</a></div></div>
+      <div class="card t-orange" data-name="probe inx che mediakind linear probe ts"><div class="card-top"><div class="card-ico">🔭</div><span class="card-tag tag-mon">PROBE</span></div><div class="card-name">Probe (INX &amp; CHE)</div><div class="card-desc">Primary TS screening toolkit — comprehensive screening &amp; diagnostic capabilities. Both INX &amp; CHE in one link.</div><a href="http://10.32.20.210/probe/?menus=MW" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-pink" data-name="linear nginx node exporter cache coralogix grafana lon1 lon2"><div class="card-top"><div class="card-ico">📈</div><span class="card-tag tag-dbg">NGINX</span></div><div class="card-name">Linear – Nginx (LON1 &amp; LON2)</div><div class="card-desc">Nginx cache metrics for Linear channels — node-level CPU/disk/network stats &amp; cache hit/miss rates.</div><div class="btn-row"><a href="https://dazn-dev.app.eu2.coralogix.com/grafana/d/rYdddlPWk1/dt-nginx-node-exporter?orgId=196&refresh=1m&var-datasource=default&var-job=node_exporter%20for%20mediakind_caches__prod__lon2&var-node=gblon2p-mk-che01&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&from=now-2d&to=now" target="_blank" class="btn-sm">Node Exporter ↗</a><a href="https://dazn-dev.app.eu2.coralogix.com/grafana/d/MsjffzSZz/dt-nginx-cache?orgId=196&refresh=30s" target="_blank" class="btn-sm">Cache ↗</a></div></div>
+      <div class="card t-orange" data-name="linear tag inx che dcs dct tag multiview"><div class="card-top"><div class="card-ico">🏷️</div><span class="card-tag tag-live">TAG</span></div><div class="card-name">Linear – TAG (DCS &amp; DCT)</div><div class="card-desc">Multiview tag screening for Linear channels — label &amp; manage multiple video streams after the Packager.</div><div class="btn-row"><a href="https://52.18.186.123/users/login" target="_blank" class="btn-sm">DCS-Tag ↗</a><a href="https://18.159.120.181/" target="_blank" class="btn-sm">DCT-Tag ↗</a></div></div>
+      <div class="card t-red" data-name="checkmk check mk infra linear servers network"><div class="card-top"><div class="card-ico">🖥️</div><span class="card-tag tag-dbg">INFRA</span></div><div class="card-name">CheckMK (Infra Level)</div><div class="card-desc">Screens servers, applications, networks, cloud infrastructure &amp; containers for MK Linear.</div><a href="https://checkmk-ng.daznservices.com/ch_central/check_mk/index.py?start_url=%2Fch_central%2Fcheck_mk%2Fview.py%3Fhost%3Dgblon1p-mk-enc04%26service%3DCPU%2Bload%26site%3Dix_prod%26view_name%3Dservice" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('mk-linear','t-orange')"><span>➕</span> Add Tool to MK Linear</div>
+    </div>
+  </div>
+
+  <!-- MK DCG -->
+  <div class="section si-purple anchor" id="mk-dcg">
+    <div class="sec-header"><div class="sec-ico">🎛️</div><div><div class="sec-title">MediaKind – DCG (Cloud)</div><div class="sec-desc">DCG &amp; DCH cloud live channels · MK.io Console · TxEdge · Probes · Grafana</div></div><span class="sec-badge b-purple">Screen 2</span></div>
+    <div class="grid" id="grid-mk-dcg">
+      <div class="card t-purple" data-name="mk.io console dcg dch mediakind saas hub"><div class="card-top"><div class="card-ico">🎛️</div><span class="card-tag tag-live">CONSOLE</span></div><div class="card-name">MK.io Console (DCG &amp; DCH)</div><div class="card-desc">DCG &amp; DCH UI — check channel status &amp; health for cloud-based MediaKind live channels. Also SaaS HUB.</div><div class="btn-row"><a href="https://app.mk.io/project/live-dazn-az-dcg-prda/liveChannels/channels" target="_blank" class="btn-sm">DCG ↗</a><a href="https://app.mk.io/project/live-dazn-az-dch-prda/liveChannels/channels" target="_blank" class="btn-sm">DCH ↗</a><a href="https://hub.aas.mediakind.com/?redir-solution=aquila" target="_blank" class="btn-sm">SaaS HUB ↗</a></div></div>
+      <div class="card t-cyan" data-name="txedge tx edge mediakind dcg dch edge"><div class="card-top"><div class="card-ico">🌐</div><span class="card-tag tag-live">EDGE</span></div><div class="card-name">TxEdge (DC-G &amp; DC-H)</div><div class="card-desc">Edge server health status &amp; DCG/DCH channel status via TechEx platform.</div><a href="https://dazn-edge.techex.co.uk/txedges" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-purple" data-name="dcg inx probe mediakind dcg probe"><div class="card-top"><div class="card-ico">🔭</div><span class="card-tag tag-mon">PROBE</span></div><div class="card-name">DCG Probe (INX &amp; CHE)</div><div class="card-desc">Continuously screens DCG video streams for anomalies &amp; defects — real-time health insights.</div><div class="btn-row"><a href="http://10.11.233.146/probe/" target="_blank" class="btn-sm">INX ↗</a><a href="http://10.111.203.216/probe/" target="_blank" class="btn-sm">CHE ↗</a></div></div>
+      <div class="card t-purple" data-name="dcg screening url mk.io output hls"><div class="card-top"><div class="card-ico">▶️</div><span class="card-tag tag-mon">SCREENING</span></div><div class="card-name">DCG Screening URL</div><div class="card-desc">Screen DCG output directly via mk.io UI links. Channel must be unsuppressed. Get links from MK.io UI for DCG &amp; DCH.</div><a href="https://dazn-az-dcg-prda-live-output.aas.mediakind.com/hlsclear/aHA5ZHpwc2NlOW5meXMwcmlteGFzZ3phOW15bmt0ZmRuYWEyaTI1MDlzMGttaXNmM2RvdzlodTN0YjQ5b3ZwZnA5Z2JvYmI2ZGoxZXo3djcwdDU5YjF5cjE1NzRseTNzN3NvYzNucHA1ZXJvZThvYnBvbWxqcmZjbDRvbzJ1dXA=/" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-pink" data-name="mk grafana dcg mediakind grafana coralogix http status"><div class="card-top"><div class="card-ico">📈</div><span class="card-tag tag-dbg">GRAFANA</span></div><div class="card-name">DCG Grafana</div><div class="card-desc">Check HTTP status codes, response times &amp; channel status in DCG via Coralogix Grafana.</div><a href="https://dazn-prod.eu2.coralogix.com/grafana/d/2887b9af-7bd5-4d10-ac51-49c9b5cbec54/mk-io-metrics-monitor-livechannels-fix?orgId=207&from=1768262400000&to=1768435199000" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('mk-dcg','t-purple')"><span>➕</span> Add Tool to MK DCG</div>
+    </div>
+  </div>
+
+  <!-- AMAGI -->
+  <div class="section si-cyan anchor" id="amagi">
+    <div class="sec-header"><div class="sec-ico">☁️</div><div><div class="sec-title">Amagi</div><div class="sec-desc">Disaster Recovery support · Cloudport UI · DR Multiview</div></div><span class="sec-badge b-cyan">Screen 3</span></div>
+    <div class="grid" id="grid-amagi">
+      <div class="card t-cyan" data-name="amagi cloudport ui dzmxp dzdr2"><div class="card-top"><div class="card-ico">☁️</div><span class="card-tag tag-live">CLOUDPORT</span></div><div class="card-name">Cloudport UI</div><div class="card-desc">Amagi Cloudport — event DR support. Monitor and manage disaster recovery streams.</div><div class="btn-row"><a href="https://dazn-fast-plec.amagi.tv/dazn/DZMXP" target="_blank" class="btn-sm">DZMXP ↗</a><a href="https://dazn-fast-plec.amagi.tv/daznrow/DZDR2" target="_blank" class="btn-sm">DZDR2 ↗</a></div></div>
+      <div class="card t-cyan" data-name="amagi multiview dr multiview disaster recovery"><div class="card-top"><div class="card-ico">🖥️</div><span class="card-tag tag-dr">DR</span></div><div class="card-name">Multiview</div><div class="card-desc">Amagi DR Multiview — visual overview of all disaster recovery streams simultaneously.</div><a href="http://195.222.59.148/dazn/multiview/dr.html" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('amagi','t-cyan')"><span>➕</span> Add Tool to Amagi</div>
+    </div>
+  </div>
+
+  <!-- ID3AS -->
+  <div class="section si-green anchor" id="id3as">
+    <div class="sec-header"><div class="sec-ico">🔬</div><div><div class="sec-title">ID3AS</div><div class="sec-desc">OTT encoding platform · INX &amp; CHE · Probes · VDP Toolkit · TAG</div></div><span class="sec-badge b-green">Screen 3</span></div>
+    <div class="grid" id="grid-id3as">
+      <div class="card t-green" data-name="id3as probe che id3as-probe-che probe"><div class="card-top"><div class="card-ico">🔭</div><span class="card-tag tag-mon">PROBE</span></div><div class="card-name">ID3AS-Probe-CHE</div><div class="card-desc">Screens video streams for anomalies &amp; defects — real-time health of ID3AS CHE delivery. Multicast: 231.11.41.101–135.</div><a href="http://10.111.203.66/probe/" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-green" data-name="id3as ui inx che admin logon"><div class="card-top"><div class="card-ico">🎛️</div><span class="card-tag tag-live">CONSOLE</span></div><div class="card-name">ID3AS UI (INX &amp; CHE)</div><div class="card-desc">Active events in ID3AS &amp; channel details — INX (Interxion) &amp; CHE (Cheltenham) admin interfaces.</div><div class="btn-row"><a href="https://ott.ix.daznservices.com/ctl/admin#logon" target="_blank" class="btn-sm">INX ↗</a><a href="https://ott.ch.daznservices.com/ctl/admin#logon" target="_blank" class="btn-sm">CHE ↗</a></div></div>
+      <div class="card t-green" data-name="id3as tag multiview video feeds"><div class="card-top"><div class="card-ico">🏷️</div><span class="card-tag tag-live">TAG</span></div><div class="card-name">TAG (ID3AS)</div><div class="card-desc">Tag screening for multiview — track &amp; supervise multiple ID3AS video feeds.</div><a href="http://10.11.233.59/" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-green" data-name="vdp toolkit vdp id3as event watcher"><div class="card-top"><div class="card-ico">🧰</div><span class="card-tag tag-dbg">TOOLKIT</span></div><div class="card-name">VDP Toolkit</div><div class="card-desc">Video Delivery Platform event watcher — monitor active VDP events and delivery status.</div><a href="https://elements-vpn.daznservices.com/elements/vdp/events/eventWatcher.action" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('id3as','t-green')"><span>➕</span> Add Tool to ID3AS</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CONVIVA -->
+  <div class="section si-orange anchor" id="conviva">
+    <div class="sec-header"><div class="sec-ico">📊</div><div><div class="sec-title">Conviva</div><div class="sec-desc">QoE analytics · Premium &amp; Freemium custom dashboards · Event trends</div></div><span class="sec-badge b-orange">Screens 5 &amp; 6</span></div>
+    <div class="grid" id="grid-conviva">
+      <div class="card t-orange" data-name="conviva premium dashboard qoe trends"><div class="card-top"><div class="card-ico">📊</div><span class="card-tag tag-live">PREMIUM</span></div><div class="card-name">Conviva – Premium</div><div class="card-desc">Custom dashboards for Premium tier — real-time QoE metrics, viewer experience &amp; event trends.</div><a href="https://pulse.conviva.com/app/experience-insights/dashboard/trends" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-orange" data-name="conviva freemium dashboard qoe"><div class="card-top"><div class="card-ico">📉</div><span class="card-tag tag-mon">FREEMIUM</span></div><div class="card-name">Conviva – Freemium</div><div class="card-desc">Custom dashboards for Freemium tier — monitor free-tier viewer experience &amp; stream quality.</div><a href="https://pulse.conviva.com/app/experience-insights/dashboard/trends" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('conviva','t-orange')"><span>➕</span> Add Tool to Conviva</div>
+    </div>
+  </div>
+
+  <!-- NEW RELIC -->
+  <div class="section si-green anchor" id="newrelic">
+    <div class="sec-header"><div class="sec-ico">🔍</div><div><div class="sec-title">New Relic</div><div class="sec-desc">Full-stack observability · FE &amp; BE dashboards · Stream monitoring</div></div><span class="sec-badge b-green">Screen 8</span></div>
+    <div class="grid" id="grid-newrelic">
+      <div class="card t-green" data-name="new relic newrelic dashboard observability fe be"><div class="card-top"><div class="card-ico">🔍</div><span class="card-tag tag-dbg">OBSERVABILITY</span></div><div class="card-name">New Relic Dashboard</div><div class="card-desc">Full-stack observability — frontend &amp; backend performance dashboards, stream health &amp; error tracking.</div><a href="https://one.newrelic.com/dashboards?state=c7a4538b-6ae1-eb05-5aeb-9368d651b0fd" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('newrelic','t-green')"><span>➕</span> Add Tool to New Relic</div>
+    </div>
+  </div>
+
+  <!-- CORALOGIX -->
+  <div class="section si-pink anchor" id="coralogix">
+    <div class="sec-header"><div class="sec-ico">📈</div><div><div class="sec-title">Coralogix</div><div class="sec-desc">Nginx cache &amp; node metrics · MK Linear DCS/DCT · Grafana dashboards</div></div><span class="sec-badge b-pink">Screen 7</span></div>
+    <div class="grid" id="grid-coralogix">
+      <div class="card t-pink" data-name="coralogix nginx node exporter grafana lon2 mediakind"><div class="card-top"><div class="card-ico">📈</div><span class="card-tag tag-dbg">GRAFANA</span></div><div class="card-name">Nginx Node Exporter</div><div class="card-desc">Node-level metrics for MediaKind cache servers — CPU, disk, network via Coralogix Grafana (LON2).</div><a href="https://dazn-dev.app.eu2.coralogix.com/grafana/d/rYdddlPWk1/dt-nginx-node-exporter?orgId=196&refresh=1m&var-datasource=default&var-job=node_exporter%20for%20mediakind_caches__prod__lon2&var-node=gblon2p-mk-che01&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&from=now-2d&to=now" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-pink" data-name="coralogix nginx cache grafana mediakind linear"><div class="card-top"><div class="card-ico">🗄️</div><span class="card-tag tag-dbg">GRAFANA</span></div><div class="card-name">Nginx Cache</div><div class="card-desc">Nginx cache dashboard for MK Linear channels — cache hit/miss rates &amp; response times (refresh 30s).</div><a href="https://dazn-dev.app.eu2.coralogix.com/grafana/d/MsjffzSZz/dt-nginx-cache?orgId=196&refresh=30s" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('coralogix','t-pink')"><span>➕</span> Add Tool to Coralogix</div>
+    </div>
+  </div>
+
+  <!-- STREAM TOOLS -->
+  <div class="section si-dazn anchor" id="streams">
+    <div class="sec-header"><div class="sec-ico">🎬</div><div><div class="sec-title">Stream Tools</div><div class="sec-desc">DAZN App · Stream Validator · Pro Stream Monitoring · FE &amp; BE dashboards</div></div><span class="sec-badge b-dazn">Screen 8</span></div>
+    <div class="grid" id="grid-streams">
+      <div class="card t-dazn" data-name="dazn app ott live vod stream"><div class="card-top"><div class="card-ico">▶️</div><span class="card-tag tag-live">APP</span></div><div class="card-name">DAZN App</div><div class="card-desc">All OTT based Live &amp; VoD content — region-based access for stream quality verification.</div><a href="https://www.dazn.com/en-CA/home" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-dazn" data-name="stream validator hls dash smooth streaming validate"><div class="card-top"><div class="card-ico">✅</div><span class="card-tag tag-mon">VALIDATOR</span></div><div class="card-name">Stream Validator</div><div class="card-desc">Validate HLS, DASH &amp; Smooth Streaming outputs — quick stream health verification tool.</div><a href="https://saikumarsid.github.io/streamvalidator.github.io/" target="_blank" class="btn">Open ↗</a></div>
+      <div class="card t-blue" data-name="pro stream monitoring livestream tool ses"><div class="card-top"><div class="card-ico">📡</div><span class="card-tag tag-mon">MONITORING</span></div><div class="card-name">Pro Stream Monitoring</div><div class="card-desc">SES Tools LiveStream monitoring — real-time pro stream health and status overview.</div><a href="https://10.219.226.10/SES_Tools/LiveStream_Tool/#/normal" target="_blank" class="btn">Open ↗</a></div>
+      <div class="add-tool-btn" onclick="openModal('streams','t-dazn')"><span>➕</span> Add Tool to Stream Tools</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="footer">
+    <span>DAZN</span> SES Engineering · Monitoring Hub &nbsp;|&nbsp;
+    Built for wall-mount &amp; ops use &nbsp;|&nbsp;
+    <a href="https://livesport.atlassian.net/wiki/spaces/SP/pages/8023277650" target="_blank" style="color:var(--accent-blue)">Confluence Reference ↗</a>
+    &nbsp;|&nbsp; <span id="footerTime"></span>
+  </div>
+</main>
+</div>
+</div><!-- end tab-monitoring -->
+
+<!-- ═══════════════════════════════════════════
+     TAB 2 — PLAYBACK DASHBOARD (UPDATED)
+═══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-playback">
+<div class="pb-wrap">
+
+  <!-- Control Panel -->
+  <div class="pb-control-panel">
+    <div class="pb-control-title">⚙️ Playback Configuration</div>
+
+    <div class="pb-control-grid">
+      <div class="pb-field">
+        <label>Headend</label>
+        <select id="pb-headend" onchange="onHeadendChange()">
+          <option value="DCA">DCA – Ireland (M2A)</option>
+          <option value="DCB">DCB – Frankfurt (M2A)</option>
+          <option value="DCG">DCG – UK South (MK)</option>
+          <option value="DCH">DCH – West Europe (MK)</option>
+        </select>
+      </div>
+      <div class="pb-field">
+        <label>Stream Format</label>
+        <select id="pb-format">
+          <option value="HLS">HLS</option>
+          <option value="DASH">DASH</option>
+          <option value="Smooth">Smooth (M2A only)</option>
+        </select>
+      </div>
+      <div class="pb-field">
+        <label>Rows</label>
+        <input type="number" id="pb-rows" value="2" min="1" max="10" onchange="syncLayoutInputs()"/>
+      </div>
+      <div class="pb-field">
+        <label>Columns</label>
+        <input type="number" id="pb-cols" value="3" min="1" max="10" onchange="syncLayoutInputs()"/>
+      </div>
+      <div class="pb-field">
+        <label>Tile Size Template</label>
+        <select id="pb-tile-size" onchange="applyTileSize()">
+          <option value="auto">Auto (Responsive)</option>
+          <option value="320x180">320 × 180</option>
+          <option value="480x270">480 × 270</option>
+          <option value="640x360">640 × 360</option>
+          <option value="854x480">854 × 480</option>
+          <option value="1280x720">1280 × 720</option>
+          <option value="1920x1080">1920 × 1080</option>
+        </select>
+      </div>
+      <div class="pb-field">
+        <label>Refresh Interval</label>
+        <select id="pb-refresh">
+          <option value="0">Off</option>
+          <option value="10">10 sec</option>
+          <option value="15">15 sec</option>
+          <option value="30">30 sec</option>
+          <option value="60">1 min</option>
+          <option value="120">2 min</option>
+          <option value="300">5 min</option>
+        </select>
+      </div>
+      <div class="pb-field">
+        <label>Health Check</label>
+        <select id="pb-health-interval">
+          <option value="10">10 sec</option>
+          <option value="30" selected>30 sec</option>
+          <option value="60">1 min</option>
+          <option value="120">2 min</option>
+          <option value="0">Off</option>
+        </select>
+      </div>
+      <div class="pb-field">
+        <label>Delay (ms)</label>
+        <input type="number" id="pb-delay" value="0" min="0" max="30000" step="500"/>
+      </div>
+    </div>
+
+    <!-- Suppressed Mode Indicator (no token field) -->
+    <div class="suppressed-indicator" id="suppressed-indicator">
+      🔐 <strong>Suppressed Event Mode ACTIVE</strong> — Hardcoded token URLs will be used for DCG/DCH
+    </div>
+
+    <!-- Toggle Row -->
+    <div class="pb-toggle-row">
+      <label class="pb-toggle">
+        <input type="checkbox" id="pb-suppressed" onchange="toggleSuppressed()"/>
+        🔐 Suppressed Event Mode
+      </label>
+      <label class="pb-toggle">
+        <input type="checkbox" id="pb-drag" checked/>
+        ✋ Enable Drag &amp; Move
+      </label>
+      <label class="pb-toggle">
+        <input type="checkbox" id="pb-mute-all" onchange="toggleMuteAll()"/>
+        🔇 Mute All
+      </label>
+    </div>
+
+    <!-- Input Area -->
+    <div class="pb-textarea-wrap">
+      <label>📋 Paste Channel Numbers &amp; Event IDs (Tab or Space separated, one per line)</label>
+      <textarea class="pb-textarea" id="pb-input" placeholder="2654    rrlk3d2kppqh19nra0d1g12ut&#10;2660    io5ai49adbea1bi28nkn9w1e1&#10;2653    1qetkj44fjb3q115tf9b53jidz&#10;2656    4c57nk9pv9f51tkjpgv44xoyt&#10;2659    1qetkj44fjb3q115tf9b53jidz"></textarea>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="pb-action-row">
+      <button class="pb-btn pb-btn-primary" onclick="generateURLs()">⚡ Generate Playback URLs</button>
+      <button class="pb-btn pb-btn-green" onclick="startPlayback()" id="pb-play-btn" disabled>▶ Start Playback</button>
+      <button class="pb-btn pb-btn-orange" onclick="exportCSV()">📥 Export CSV</button>
+      <button class="pb-btn pb-btn-ghost" onclick="sharePlayback()">🔗 Share Playback</button>
+      <button class="pb-btn pb-btn-ghost" onclick="clearAll()">🗑 Clear All</button>
+      <button class="pb-btn pb-btn-red" onclick="stopAll()" id="pb-stop-btn" style="display:none">⏹ Stop All</button>
+    </div>
+  </div>
+
+  <!-- Share Box -->
+  <div class="share-box" id="share-box" style="display:none">
+    <div class="share-box-title">🔗 Shareable Playback Session — Single Link for All Tiles</div>
+    <div class="share-url-row">
+      <input type="text" class="share-url-input" id="share-url-input" readonly/>
+      <button class="copy-btn" onclick="copyShareURL()">📋 Copy Link</button>
+    </div>
+  </div>
+
+  <!-- URL Table -->
+  <div class="pb-table-wrap" id="pb-table-wrap" style="display:none">
+    <div class="pb-table-header">
+      <div class="pb-table-title">📋 Generated Playback URLs <span id="pb-url-count" style="font-size:11px;color:var(--text-muted);font-weight:400"></span></div>
+      <div class="pb-table-actions">
+        <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="exportCSV()">📥 CSV</button>
+        <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="copyAllURLs()">📋 Copy All</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="pb-table" id="pb-url-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Channel No</th>
+            <th>Event ID</th>
+            <th>Headend</th>
+            <th>Format</th>
+            <th>Generated URL</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="pb-url-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Multiview Live Controls Bar -->
+  <div class="pb-mv-controls" id="pb-mv-controls" style="display:none">
+    <div class="utc-clock" id="utc-clock">UTC --:--:--</div>
+    <div class="pb-mv-divider"></div>
+    <div class="pb-mv-ctrl-group">
+      <label>Rows</label>
+      <input type="number" id="mv-rows-live" value="2" min="1" max="10" onchange="applyGridLayout()"/>
+    </div>
+    <div class="pb-mv-ctrl-group">
+      <label>Cols</label>
+      <input type="number" id="mv-cols-live" value="3" min="1" max="10" onchange="applyGridLayout()"/>
+    </div>
+    <div class="pb-mv-ctrl-group">
+      <label>Size</label>
+      <select id="mv-size-live" onchange="applyTileSizeLive()">
+        <option value="auto">Auto</option>
+        <option value="320x180">320×180</option>
+        <option value="480x270">480×270</option>
+        <option value="640x360">640×360</option>
+        <option value="854x480">854×480</option>
+        <option value="1280x720">1280×720</option>
+        <option value="1920x1080">1920×1080</option>
+      </select>
+    </div>
+    <div class="pb-mv-divider"></div>
+    <div class="pb-mv-ctrl-group">
+      <label>Filter</label>
+      <input type="text" id="mv-filter" placeholder="Channel…" style="width:90px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text-primary);outline:none;" oninput="filterTiles(this.value)"/>
+    </div>
+    <div class="pb-mv-divider"></div>
+    <div class="pb-mv-ctrl-group">
+      <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="muteAllTiles()">🔇 Mute All</button>
+      <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="unmuteAllTiles()">🔊 Unmute</button>
+      <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="fullscreenGrid()">⛶ Fullscreen</button>
+      <button class="pb-btn pb-btn-red" style="padding:5px 12px;font-size:11px" onclick="stopAll()">⏹ Stop All</button>
+    </div>
+  </div>
+
+  <!-- Playback Grid -->
+  <div class="pb-grid" id="pb-grid">
+    <div class="pb-empty" id="pb-empty-state">
+      <div class="pb-empty-icon">▶️</div>
+      <div class="pb-empty-title">No Streams Playing</div>
+      <div class="pb-empty-sub">Paste your Channel Numbers &amp; Event IDs above, select Headend &amp; Format, then click <strong>⚡ Generate Playback URLs</strong> followed by <strong>▶ Start Playback</strong>.</div>
+    </div>
+  </div>
+
+</div>
+</div><!-- end tab-playback -->
+
+<!-- ADD TOOL MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">➕ Add New Tool</div>
+    <div class="modal-sub" id="modalSub">Adding to section</div>
+    <div class="modal-field"><label>Tool Name *</label><input type="text" id="modalName" placeholder="e.g. My Dashboard"/></div>
+    <div class="modal-field"><label>Description</label><textarea id="modalDesc" placeholder="Brief description…"></textarea></div>
+    <div class="modal-field"><label>Icon (emoji)</label><input type="text" id="modalIcon" placeholder="e.g. 📊" maxlength="4"/></div>
+    <div class="modal-field"><label>Tag Label</label><input type="text" id="modalTag" placeholder="e.g. DASHBOARD"/></div>
+    <div class="modal-field"><label>Tag Type</label>
+      <select id="modalTagType">
+        <option value="tag-mon">MONITOR (Blue)</option>
+        <option value="tag-live">LIVE (Green)</option>
+        <option value="tag-dbg">DEBUG (Purple)</option>
+        <option value="tag-aws">AWS (Yellow)</option>
+        <option value="tag-dr">DR (Red)</option>
+        <option value="tag-new">NEW (Cyan)</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Link Label 1 *</label><input type="text" id="modalLinkLabel1" placeholder="e.g. Open"/></div>
+    <div class="modal-field"><label>URL 1 *</label><input type="url" id="modalUrl1" placeholder="https://…"/></div>
+    <div class="modal-field"><label>Link Label 2 (optional)</label><input type="text" id="modalLinkLabel2" placeholder="e.g. CHE"/></div>
+    <div class="modal-field"><label>URL 2 (optional)</label><input type="url" id="modalUrl2" placeholder="https://…"/></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-save" onclick="saveCard()">Add Tool ✓</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════
+function updateClock(){
+  const now = new Date();
+  const t = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const d = now.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  document.getElementById('clock').textContent = t;
+  const ft = document.getElementById('footerTime');
+  if(ft) ft.textContent = d+' · '+t;
+  const utc = document.getElementById('utc-clock');
+  if(utc){
+    const utcStr = new Date().toUTCString();
+    utc.textContent = 'UTC '+utcStr.split(' ')[4];
+  }
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme', isDark?'light':'dark');
+  document.getElementById('themeBtn').textContent = isDark?'☀️':'🌙';
+});
+
+// ═══════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════
+function switchTab(tab, btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='playback') checkSharedSession();
+}
+
+// ═══════════════════════════════════════════
+// MONITORING — SEARCH
+// ═══════════════════════════════════════════
+function filterCards(query){
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(card=>{
+    const name=(card.getAttribute('data-name')||'').toLowerCase();
+    const text=card.innerText.toLowerCase();
+    card.classList.toggle('hidden', q!==''&&!name.includes(q)&&!text.includes(q));
+  });
+  document.querySelectorAll('.section').forEach(section=>{
+    const cards=section.querySelectorAll('.card');
+    const allHidden=Array.from(cards).every(c=>c.classList.contains('hidden'));
+    section.style.display=(q!==''&&allHidden)?'none':'';
+  });
+}
+
+// ═══════════════════════════════════════════
+// MONITORING — SIDEBAR SCROLL SPY
+// ═══════════════════════════════════════════
+const sbItems = document.querySelectorAll('.sb-item');
+sbItems.forEach(item=>{
+  item.addEventListener('click',()=>{
+    sbItems.forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+const sections = document.querySelectorAll('.anchor');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id=entry.target.getAttribute('id');
+      sbItems.forEach(item=>{
+        item.classList.toggle('active',item.getAttribute('href')==='#'+id);
+      });
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s=>observer.observe(s));
+
+// ═══════════════════════════════════════════
+// ADD TOOL MODAL
+// ═══════════════════════════════════════════
+let currentGridId='';
+let currentTheme='t-blue';
+function openModal(gridId,theme){
+  currentGridId=gridId; currentTheme=theme;
+  const names={'m2a':'M2A Media','mk-linear':'MediaKind Linear','mk-dcg':'MediaKind DCG','amagi':'Amagi','id3as':'ID3AS','conviva':'Conviva','newrelic':'New Relic','coralogix':'Coralogix','streams':'Stream Tools'};
+  document.getElementById('modalSub').textContent='Adding to: '+(names[gridId]||gridId);
+  document.getElementById('modalName').value='';
+  document.getElementById('modalDesc').value='';
+  document.getElementById('modalIcon').value='🔗';
+  document.getElementById('modalTag').value='TOOL';
+  document.getElementById('modalTagType').value='tag-mon';
+  document.getElementById('modalLinkLabel1').value='Open';
+  document.getElementById('modalUrl1').value='';
+  document.getElementById('modalLinkLabel2').value='';
+  document.getElementById('modalUrl2').value='';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.getElementById('modalOverlay').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+function saveCard(){
+  const name=document.getElementById('modalName').value.trim();
+  const url1=document.getElementById('modalUrl1').value.trim();
+  const label1=document.getElementById('modalLinkLabel1').value.trim()||'Open';
+  if(!name){alert('Please enter a Tool Name.');return;}
+  if(!url1){alert('Please enter at least one URL.');return;}
+  const desc=document.getElementById('modalDesc').value.trim()||'Custom tool added by SES Engineering team.';
+  const icon=document.getElementById('modalIcon').value.trim()||'🔗';
+  const tagLabel=document.getElementById('modalTag').value.trim().toUpperCase()||'TOOL';
+  const tagType=document.getElementById('modalTagType').value;
+  const url2=document.getElementById('modalUrl2').value.trim();
+  const label2=document.getElementById('modalLinkLabel2').value.trim();
+  let btnHtml='';
+  if(url2&&label2){
+    btnHtml=`<div class="btn-row"><a href="$${url1}" target="_blank" class="btn-sm">$${label1} ↗</a><a href="$${url2}" target="_blank" class="btn-sm">$${label2} ↗</a></div>`;
+  } else {
+    btnHtml=`<a href="$${url1}" target="_blank" class="btn">$${label1} ↗</a>`;
+  }
+  const cardHtml=`
+    <div class="card $${currentTheme}" data-name="$${name.toLowerCase()} custom">
+      <div class="card-top"><div class="card-ico">$${icon}</div><span class="card-tag $${tagType}">${tagLabel}</span></div>
+      <div class="card-name">${name}</div>
+      <div class="card-desc">${desc}</div>
+      ${btnHtml}
+    </div>`;
+  const grid=document.getElementById('grid-'+currentGridId);
+  const addBtn=grid.querySelector('.add-tool-btn');
+  addBtn.insertAdjacentHTML('beforebegin',cardHtml);
+  const totalEl=document.getElementById('totalLinks');
+  if(totalEl) totalEl.textContent=parseInt(totalEl.textContent)+1;
+  closeModal();
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — HARDCODED URL TEMPLATES
+// ═══════════════════════════════════════════
+const HARDCODED_TOKEN = 'aHA5ZHpwc2NlOW5meXMwcmlteGFzZ3phOW15bmt0ZmRuYWEyaTI1MDlzMGttaXNmM2RvdzlodTN0YjQ5b3ZwZnA5Z2JvYmI2ZGoxZXo3djcwdDU5YjF5cjE1NzRseTNzN3NvYzNucHA1ZXJvZThvYnBvbWxqcmZjbDRvbzJ1dXA=';
+
+const URL_TEMPLATES = {
+  DCA:{
+    HLS:   'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/stream.m3u8?outlet=global',
+    DASH:  'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/stream.mpd?outlet=global',
+    Smooth:'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/Manifest?outlet=global'
+  },
+  DCB:{
+    HLS:   'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/stream.m3u8?outlet=global',
+    DASH:  'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/stream.mpd?outlet=global',
+    Smooth:'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/Manifest?outlet=global'
+  },
+  DCG:{
+    HLS:  'https://live-live-dazn-az-dcg-prda.uksouth-3.streaming.mediakind.com/cmaf/{EVENT_ID}/index.m3u8',
+    DASH: 'https://live-live-dazn-az-dcg-prda.uksouth-3.streaming.mediakind.com/cmaf/{EVENT_ID}/manifest.mpd',
+    Smooth: null
+  },
+  DCH:{
+    HLS:  'https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/cmaf/{EVENT_ID}/index.m3u8',
+    DASH: 'https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/cmaf/{EVENT_ID}/manifest.mpd',
+    Smooth: null
+  }
+};
+
+// Suppressed templates — token is HARDCODED, only {EVENT_ID} changes
+const SUPPRESSED_TEMPLATES = {
+  DCG:{
+    HLS:  `https://dazn-dcg-prda.uksouth-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.m3u8`,
+    DASH: `https://dazn-dcg-prda.uksouth-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.mpd`
+  },
+  DCH:{
+    HLS:  `https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.m3u8`,
+    DASH: `https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.mpd`
+  }
+};
+
+// ═══════════════════════════════════════════
+// PLAYBACK — STATE
+// ═══════════════════════════════════════════
+let generatedEntries = [];
+let healthTimers     = [];
+let refreshTimer     = null;
+let sharedSessionChecked = false;
+
+// ═══════════════════════════════════════════
+// PLAYBACK — HEADEND CHANGE
+// ═══════════════════════════════════════════
+function onHeadendChange(){
+  const he  = document.getElementById('pb-headend').value;
+  const fmt = document.getElementById('pb-format');
+  const smooth = fmt.querySelector('option[value="Smooth"]');
+  if(he==='DCG'||he==='DCH'){
+    smooth.disabled=true;
+    smooth.textContent='Smooth (N/A for MK)';
+    if(fmt.value==='Smooth') fmt.value='HLS';
+  } else {
+    smooth.disabled=false;
+    smooth.textContent='Smooth (M2A only)';
+  }
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — SUPPRESSED TOGGLE (NO TOKEN FIELD)
+// ═══════════════════════════════════════════
+function toggleSuppressed(){
+  const checked = document.getElementById('pb-suppressed').checked;
+  const ind     = document.getElementById('suppressed-indicator');
+  ind.classList.toggle('visible', checked);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — PARSE INPUT
+// ═══════════════════════════════════════════
+function parseInput(){
+  const raw = document.getElementById('pb-input').value.trim();
+  if(!raw) return [];
+  const lines = raw.split('\n').filter(l=>l.trim());
+  return lines.map(line=>{
+    const parts = line.trim().split(/[\t\s]+/);
+    if(parts.length>=2) return {channel:parts[0].trim(), eventId:parts[1].trim()};
+    if(parts.length===1&&parts[0]) return {channel:'—', eventId:parts[0].trim()};
+    return null;
+  }).filter(Boolean);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — BUILD URL
+// ═══════════════════════════════════════════
+function buildURL(eventId, headend, format){
+  const suppressed = document.getElementById('pb-suppressed').checked;
+  if(suppressed && (headend==='DCG'||headend==='DCH')){
+    const tpl = SUPPRESSED_TEMPLATES[headend]?.[format];
+    if(!tpl) return null;
+    // Only EVENT_ID changes — token is already hardcoded in template
+    return tpl.replace('{EVENT_ID}', eventId);
+  }
+  const tpl = URL_TEMPLATES[headend]?.[format];
+  if(!tpl) return null;
+  return tpl.replace('{EVENT_ID}', eventId);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — GENERATE URLs TABLE
+// ═══════════════════════════════════════════
+function generateURLs(){
+  const entries = parseInput();
+  if(!entries.length){alert('Please paste at least one Channel Number and Event ID.');return;}
+  const headend = document.getElementById('pb-headend').value;
+  const format  = document.getElementById('pb-format').value;
+
+  generatedEntries = entries.map((e,i)=>({
+    idx    : i+1,
+    channel: e.channel,
+    eventId: e.eventId,
+    headend,
+    format,
+    url    : buildURL(e.eventId, headend, format),
+    suppressed: document.getElementById('pb-suppressed').checked
+  })).filter(e=>e.url);
+
+  if(!generatedEntries.length){
+    alert('No valid URLs could be generated for the selected Headend/Format combination.');
+    return;
+  }
+
+  const tbody = document.getElementById('pb-url-tbody');
+  tbody.innerHTML='';
+  generatedEntries.forEach(e=>{
+    const safeUrl = e.url.replace(/'/g,"\\'");
+    const tr = document.createElement('tr');
+    tr.innerHTML=`
+      <td style="color:var(--text-muted);font-weight:600">${e.idx}</td>
+      <td style="font-weight:700;color:var(--text-primary)">${e.channel}</td>
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:var(--accent-cyan)">${e.eventId}</td>
+      <td><span style="font-weight:700;color:var(--accent-dazn)">$${e.headend}</span>$${e.suppressed?'<span class="badge-sup" style="margin-left:4px;font-size:9px;padding:1px 5px;border-radius:8px">SUP</span>':''}</td>
+      <td><span class="card-tag $${e.format==='HLS'?'tag-live':e.format==='DASH'?'tag-mon':'tag-dbg'}">$${e.format}</span></td>
+      <td><span class="pb-url-cell" title="$${e.url}" onclick="copyURL('$${safeUrl}')">${e.url}</span></td>
+      <td><span class="status-ready">● Ready</span></td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="pb-tile-btn" title="Copy URL" onclick="copyURL('${safeUrl}')">📋</button>
+          <button class="pb-tile-btn" title="Open in new tab" onclick="window.open('${safeUrl}','_blank')">↗</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('pb-url-count').textContent=`(${generatedEntries.length} streams)`;
+  document.getElementById('pb-table-wrap').style.display='block';
+  document.getElementById('pb-play-btn').disabled=false;
+  showToast(`✅ ${generatedEntries.length} URLs generated successfully!`);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — LAYOUT SYNC
+// ═══════════════════════════════════════════
+function syncLayoutInputs(){
+  const r = document.getElementById('pb-rows').value;
+  const c = document.getElementById('pb-cols').value;
+  const lr = document.getElementById('mv-rows-live');
+  const lc = document.getElementById('mv-cols-live');
+  if(lr) lr.value=r;
+  if(lc) lc.value=c;
+  applyGridLayout();
+}
+
+function applyGridLayout(){
+  const rows = parseInt(document.getElementById('mv-rows-live')?.value||document.getElementById('pb-rows').value)||2;
+  const cols = parseInt(document.getElementById('mv-cols-live')?.value||document.getElementById('pb-cols').value)||3;
+  const grid = document.getElementById('pb-grid');
+  grid.style.gridTemplateColumns=`repeat(${cols}, 1fr)`;
+  // Sync config inputs
+  const pr = document.getElementById('pb-rows');
+  const pc = document.getElementById('pb-cols');
+  const lr = document.getElementById('mv-rows-live');
+  const lc = document.getElementById('mv-cols-live');
+  if(pr) pr.value=rows;
+  if(pc) pc.value=cols;
+  if(lr) lr.value=rows;
+  if(lc) lc.value=cols;
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — TILE SIZE TEMPLATES
+// ═══════════════════════════════════════════
+function applyTileSize(){
+  const val = document.getElementById('pb-tile-size').value;
+  const lv  = document.getElementById('mv-size-live');
+  if(lv) lv.value=val;
+  applyTileSizeToGrid(val);
+}
+function applyTileSizeLive(){
+  const val = document.getElementById('mv-size-live').value;
+  const ps  = document.getElementById('pb-tile-size');
+  if(ps) ps.value=val;
+  applyTileSizeToGrid(val);
+}
+function applyTileSizeToGrid(val){
+  const grid = document.getElementById('pb-grid');
+  if(val==='auto'){
+    grid.style.gridTemplateColumns='';
+    applyGridLayout();
+    document.querySelectorAll('.pb-tile-video-wrap').forEach(w=>{
+      w.style.paddingTop='56.25%';
+      w.style.height='';
+    });
+  } else {
+    const parts = val.split('x');
+    const w = parseInt(parts[0]);
+    const h = parseInt(parts[1]);
+    const ratio = (h/w*100).toFixed(4)+'%';
+    document.querySelectorAll('.pb-tile-video-wrap').forEach(wrap=>{
+      wrap.style.paddingTop=ratio;
+    });
+    const cols = parseInt(document.getElementById('mv-cols-live')?.value||document.getElementById('pb-cols').value)||3;
+    grid.style.gridTemplateColumns=`repeat($${cols}, $${w}px)`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — START PLAYBACK
+// ═══════════════════════════════════════════
+function startPlayback(){
+  if(!generatedEntries.length) return;
+  const delay = parseInt(document.getElementById('pb-delay').value)||0;
+
+  document.getElementById('pb-mv-controls').style.display='flex';
+  document.getElementById('pb-stop-btn').style.display='inline-flex';
+
+  const grid = document.getElementById('pb-grid');
+  grid.innerHTML='';
+
+  // Apply layout
+  applyGridLayout();
+
+  generatedEntries.forEach((e,i)=>{
+    setTimeout(()=>{
+      const tile = createTile(e);
+      grid.appendChild(tile);
+      startHealthCheck(e);
+    }, i*delay);
+  });
+
+  setupRefresh();
+  showToast(`▶ Starting ${generatedEntries.length} streams…`);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — CREATE TILE
+// ═══════════════════════════════════════════
+function createTile(e){
+  const tile = document.createElement('div');
+  tile.className='pb-tile health-loading';
+  tile.id=`tile-${e.idx}`;
+  tile.setAttribute('draggable','true');
+  tile.setAttribute('data-channel', e.channel);
+
+  const fmtBadge = e.format==='HLS'?'badge-hls':e.format==='DASH'?'badge-dash':'badge-smooth';
+  const supBadge = e.suppressed?'<span class="pb-tile-badge badge-sup">SUP</span>':'';
+  const safeUrl  = e.url.replace(/'/g,"\\'");
+
+  tile.innerHTML=`
+    <div class="pb-tile-header">
+      <div class="pb-tile-title">
+        📺 $${e.channel} | $${e.headend}
+        <span class="pb-tile-badge $${fmtBadge}">$${e.format}</span>
+        ${supBadge}
+      </div>
+      <div class="pb-tile-controls">
+        <button class="pb-tile-btn" id="mute-btn-$${e.idx}" title="Mute/Unmute" onclick="toggleMuteTile($${e.idx})">🔊</button>
+        <button class="pb-tile-btn" title="Fullscreen" onclick="fullscreenTile(${e.idx})">⛶</button>
+        <button class="pb-tile-btn" title="Copy URL" onclick="copyURL('${safeUrl}')">📋</button>
+        <button class="pb-tile-btn" title="Open in new tab" onclick="window.open('${safeUrl}','_blank')">↗</button>
+        <button class="pb-tile-btn" title="Retry stream" onclick="retryTile($${e.idx},'$${safeUrl}')">🔄</button>
+        <button class="pb-tile-btn" title="Pin tile" onclick="pinTile(${e.idx})">📌</button>
+        <button class="pb-tile-btn" title="Remove tile" onclick="removeTile(${e.idx})" style="color:var(--accent-red)">✕</button>
+      </div>
+    </div>
+    <div class="pb-tile-video-wrap" id="vwrap-${e.idx}" style="padding-top:56.25%">
+      <div class="pb-tile-placeholder" id="placeholder-${e.idx}">
+        <div class="pb-tile-placeholder-icon">⏳</div>
+        <div class="pb-tile-placeholder-text">Loading stream…<br><span style="font-size:10px;color:var(--accent-cyan)">${e.eventId}</span></div>
+      </div>
+    </div>
+    <div class="pb-tile-footer">
+      <div class="pb-tile-status" id="status-${e.idx}">
+        <div class="pb-tile-status-dot dot-yellow"></div>
+        <span style="color:var(--accent-dazn)">Loading…</span>
+      </div>
+      <div class="pb-tile-meta">
+        <span class="pb-tile-latency" id="latency-${e.idx}">-- ms</span>
+        <span style="font-size:10px;color:var(--text-muted)">${e.eventId.substring(0,14)}…</span>
+      </div>
+    </div>
+    <div class="pb-tile-health-bar loading" id="hbar-${e.idx}"></div>`;
+
+  // Drag & Drop
+  tile.addEventListener('dragstart',ev=>{
+    if(!document.getElementById('pb-drag').checked) return;
+    ev.dataTransfer.setData('text/plain', tile.id);
+    setTimeout(()=>tile.style.opacity='0.4',0);
+  });
+  tile.addEventListener('dragend',()=>{ tile.style.opacity='1'; });
+  tile.addEventListener('dragover',ev=>{ ev.preventDefault(); tile.style.outline='2px dashed var(--accent-blue)'; });
+  tile.addEventListener('dragleave',()=>{ tile.style.outline=''; });
+  tile.addEventListener('drop',ev=>{
+    ev.preventDefault();
+    tile.style.outline='';
+    const dragId = ev.dataTransfer.getData('text/plain');
+    const dragEl = document.getElementById(dragId);
+    const grid   = document.getElementById('pb-grid');
+    if(dragEl && dragEl!==tile){
+      const all      = [...grid.querySelectorAll('.pb-tile')];
+      const dragIdx  = all.indexOf(dragEl);
+      const dropIdx  = all.indexOf(tile);
+      if(dragIdx < dropIdx) tile.after(dragEl);
+      else tile.before(dragEl);
+    }
+  });
+
+  // Load stream after short delay
+  setTimeout(()=>loadStream(e.idx, e.url, e.format), 400);
+
+  // Apply current tile size
+  const sizeVal = document.getElementById('pb-tile-size').value;
+  if(sizeVal!=='auto'){
+    const parts = sizeVal.split('x');
+    const w = parseInt(parts[0]);
+    const h = parseInt(parts[1]);
+    tile.querySelector('.pb-tile-video-wrap').style.paddingTop=(h/w*100).toFixed(4)+'%';
+  }
+
+  return tile;
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — LOAD STREAM
+// ═══════════════════════════════════════════
+function loadStream(idx, url, format){
+  const wrap        = document.getElementById(`vwrap-${idx}`);
+  const placeholder = document.getElementById(`placeholder-${idx}`);
+  if(!wrap) return;
+
+  // Remove old video if exists
+  const old = document.getElementById(`video-${idx}`);
+  if(old){ old.pause(); old.src=''; old.remove(); }
+
+  const video = document.createElement('video');
+  video.id          = `video-${idx}`;
+  video.controls    = true;
+  video.muted       = true;
+  video.autoplay    = true;
+  video.playsInline = true;
+  video.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#000';
+
+  const t0 = Date.now();
+
+  video.addEventListener('playing',()=>{
+    setTileHealth(idx,'good');
+    const lat = Date.now()-t0;
+    const latEl = document.getElementById(`latency-${idx}`);
+    if(latEl) latEl.textContent = lat+'ms';
+    if(placeholder) placeholder.style.display='none';
+  });
+  video.addEventListener('error',()=>setTileHealth(idx,'bad'));
+  video.addEventListener('stalled',()=>setTileHealth(idx,'loading'));
+  video.addEventListener('waiting',()=>setTileHealth(idx,'loading'));
+
+  wrap.appendChild(video);
+
+  if(format==='HLS'){
+    if(window.Hls && Hls.isSupported()){
+      const hls = new Hls({enableWorker:true, lowLatencyMode:true});
+      hls.loadSource(url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.ERROR,(ev,data)=>{
+        if(data.fatal) setTileHealth(idx,'bad');
+      });
+      video._hls = hls;
+    } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+      video.src = url;
+    } else {
+      setTileHealth(idx,'bad');
+      if(placeholder){
+        placeholder.innerHTML=`<div class="pb-tile-placeholder-icon">⚠️</div><div class="pb-tile-placeholder-text">HLS.js not loaded.<br>Click ↗ to open in new tab.</div>`;
+        placeholder.style.display='flex';
+      }
+      return;
+    }
+  } else if(format==='DASH'){
+    if(window.dashjs){
+      const player = dashjs.MediaPlayer().create();
+      player.initialize(video, url, true);
+      video._dashPlayer = player;
+    } else {
+      video.src = url;
+    }
+  } else {
+    video.src = url;
+  }
+
+  video.play().catch(()=>{});
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — HEALTH
+// ═══════════════════════════════════════════
+function setTileHealth(idx, state){
+  const tile   = document.getElementById(`tile-${idx}`);
+  const status = document.getElementById(`status-${idx}`);
+  const hbar   = document.getElementById(`hbar-${idx}`);
+  if(!tile) return;
+  tile.classList.remove('health-good','health-bad','health-loading');
+  if(state==='good'){
+    tile.classList.add('health-good');
+    if(status) status.innerHTML=`<div class="pb-tile-status-dot dot-green"></div><span style="color:var(--accent-green)">Playing ✓</span>`;
+    if(hbar){ hbar.classList.remove('bad','loading'); }
+  } else if(state==='bad'){
+    tile.classList.add('health-bad');
+    if(status) status.innerHTML=`<div class="pb-tile-status-dot dot-red"></div><span style="color:var(--accent-red)">Error ✗</span>`;
+    if(hbar){ hbar.classList.add('bad'); hbar.classList.remove('loading'); }
+  } else {
+    tile.classList.add('health-loading');
+    if(status) status.innerHTML=`<div class="pb-tile-status-dot dot-yellow"></div><span style="color:var(--accent-dazn)">Buffering…</span>`;
+    if(hbar){ hbar.classList.add('loading'); hbar.classList.remove('bad'); }
+  }
+}
+
+function startHealthCheck(e){
+  const interval = parseInt(document.getElementById('pb-health-interval').value)||30;
+  if(interval===0) return;
+  const timer = setInterval(()=>{
+    const video = document.getElementById(`video-${e.idx}`);
+    if(!video){ clearInterval(timer); return; }
+    if(video.error || video.ended) setTileHealth(e.idx,'bad');
+    else if(video.paused) setTileHealth(e.idx,'loading');
+    else if(video.readyState>=3) setTileHealth(e.idx,'good');
+    else setTileHealth(e.idx,'loading');
+  }, interval*1000);
+  healthTimers.push(timer);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — TILE CONTROLS
+// ═══════════════════════════════════════════
+function toggleMuteTile(idx){
+  const video = document.getElementById(`video-${idx}`);
+  const btn   = document.getElementById(`mute-btn-${idx}`);
+  if(!video) return;
+  video.muted = !video.muted;
+  if(btn) btn.textContent = video.muted ? '🔇' : '🔊';
+}
+
+function fullscreenTile(idx){
+  const wrap = document.getElementById(`vwrap-${idx}`);
+  if(!wrap) return;
+  if(document.fullscreenElement){
+    document.exitFullscreen();
+  } else {
+    if(wrap.requestFullscreen) wrap.requestFullscreen();
+    else if(wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+  }
+}
+
+function retryTile(idx, url){
+  const entry = generatedEntries.find(e=>e.idx===idx);
+  if(!entry) return;
+  setTileHealth(idx,'loading');
+  const placeholder = document.getElementById(`placeholder-${idx}`);
+  if(placeholder){
+    placeholder.innerHTML=`<div class="pb-tile-placeholder-icon">⏳</div><div class="pb-tile-placeholder-text">Retrying…</div>`;
+    placeholder.style.display='flex';
+  }
+  setTimeout(()=>loadStream(idx, url, entry.format), 600);
+}
+
+function pinTile(idx){
+  const tile = document.getElementById(`tile-${idx}`);
+  if(tile) tile.classList.toggle('pinned');
+}
+
+function removeTile(idx){
+  const tile  = document.getElementById(`tile-${idx}`);
+  const video = document.getElementById(`video-${idx}`);
+  if(video){
+    if(video._hls){ video._hls.destroy(); }
+    if(video._dashPlayer){ video._dashPlayer.reset(); }
+    video.pause(); video.src='';
+  }
+  if(tile) tile.remove();
+  generatedEntries = generatedEntries.filter(e=>e.idx!==idx);
+  if(!document.getElementById('pb-grid').querySelector('.pb-tile')){
+    document.getElementById('pb-grid').innerHTML=`<div class="pb-empty"><div class="pb-empty-icon">▶️</div><div class="pb-empty-title">All tiles removed</div><div class="pb-empty-sub">Generate new URLs and start playback.</div></div>`;
+    document.getElementById('pb-mv-controls').style.display='none';
+  }
+}
+
+function muteAllTiles(){
+  document.querySelectorAll('#pb-grid video').forEach(v=>{ v.muted=true; });
+  document.querySelectorAll('[id^="mute-btn-"]').forEach(b=>{ b.textContent='🔇'; });
+}
+function unmuteAllTiles(){
+  document.querySelectorAll('#pb-grid video').forEach(v=>{ v.muted=false; });
+  document.querySelectorAll('[id^="mute-btn-"]').forEach(b=>{ b.textContent='🔊'; });
+}
+function toggleMuteAll(){
+  const checked = document.getElementById('pb-mute-all').checked;
+  if(checked) muteAllTiles(); else unmuteAllTiles();
+}
+function fullscreenGrid(){
+  const grid = document.getElementById('pb-grid');
+  if(document.fullscreenElement){ document.exitFullscreen(); }
+  else if(grid.requestFullscreen) grid.requestFullscreen();
+  else if(grid.webkitRequestFullscreen) grid.webkitRequestFullscreen();
+}
+function stopAll(){
+  document.querySelectorAll('#pb-grid video').forEach(v=>{
+    if(v._hls){ v._hls.destroy(); }
+    if(v._dashPlayer){ v._dashPlayer.reset(); }
+    v.pause(); v.src='';
+  });
+  healthTimers.forEach(t=>clearInterval(t));
+  healthTimers=[];
+  if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; }
+  document.getElementById('pb-grid').innerHTML=`<div class="pb-empty"><div class="pb-empty-icon">⏹</div><div class="pb-empty-title">Playback Stopped</div><div class="pb-empty-sub">Click <strong>▶ Start Playback</strong> to resume.</div></div>`;
+  document.getElementById('pb-mv-controls').style.display='none';
+  document.getElementById('pb-stop-btn').style.display='none';
+}
+function clearAll(){
+  stopAll();
+  document.getElementById('pb-input').value='';
+  document.getElementById('pb-table-wrap').style.display='none';
+  document.getElementById('pb-play-btn').disabled=true;
+  document.getElementById('share-box').style.display='none';
+  document.getElementById('suppressed-indicator').classList.remove('visible');
+  document.getElementById('pb-suppressed').checked=false;
+  generatedEntries=[];
+  document.getElementById('pb-grid').innerHTML=`<div class="pb-empty"><div class="pb-empty-icon">▶️</div><div class="pb-empty-title">No Streams Playing</div><div class="pb-empty-sub">Paste your Channel Numbers &amp; Event IDs above, select Headend &amp; Format, then click <strong>⚡ Generate Playback URLs</strong> followed by <strong>▶ Start Playback</strong>.</div></div>`;
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — FILTER TILES
+// ═══════════════════════════════════════════
+function filterTiles(query){
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.pb-tile').forEach(tile=>{
+    const ch  = (tile.getAttribute('data-channel')||'').toLowerCase();
+    const txt = tile.innerText.toLowerCase();
+    tile.style.display=(q===''||ch.includes(q)||txt.includes(q))?'':'none';
+  });
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — REFRESH INTERVAL (10s to 5min)
+// ═══════════════════════════════════════════
+function setupRefresh(){
+  if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; }
+  const secs = parseInt(document.getElementById('pb-refresh').value)||0;
+  if(secs===0) return;
+  refreshTimer = setInterval(()=>{
+    generatedEntries.forEach(e=>{
+      retryTile(e.idx, e.url);
+    });
+    showToast('🔄 Streams refreshed');
+  }, secs*1000);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — CSV EXPORT (no headers, Channel,URL only)
+// ═══════════════════════════════════════════
+function exportCSV(){
+  if(!generatedEntries.length){ alert('Generate URLs first.'); return; }
+  // Format: ChannelNumber,PlaybackURL — NO headers, NO extra columns
+  const rows = generatedEntries.map(e=>`${e.channel},${e.url}`);
+  const blob = new Blob([rows.join('\n')],{type:'text/csv'});
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `dazn-playback-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📥 CSV exported successfully!');
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — COPY URL
+// ═══════════════════════════════════════════
+function copyURL(url){
+  navigator.clipboard.writeText(url).then(()=>{
+    showToast('📋 URL copied to clipboard!');
+  }).catch(()=>{
+    const ta = document.createElement('textarea');
+    ta.value=url; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('📋 URL copied!');
+  });
+}
+function copyAllURLs(){
+  if(!generatedEntries.length) return;
+  copyURL(generatedEntries.map(e=>e.url).join('\n'));
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — SHARE SESSION (single link, all tiles)
+// ═══════════════════════════════════════════
+function sharePlayback(){
+  if(!generatedEntries.length){ alert('Generate URLs first.'); return; }
+  const rows    = document.getElementById('pb-rows').value;
+  const cols    = document.getElementById('pb-cols').value;
+  const session = {
+    headend   : document.getElementById('pb-headend').value,
+    format    : document.getElementById('pb-format').value,
+    suppressed: document.getElementById('pb-suppressed').checked,
+    rows, cols,
+    tileSize  : document.getElementById('pb-tile-size').value,
+    entries   : generatedEntries.map(e=>({channel:e.channel, eventId:e.eventId}))
+  };
+  const encoded  = btoa(unescape(encodeURIComponent(JSON.stringify(session))));
+  const shareURL = window.location.href.split('?')[0]+'?pbsession='+encoded;
+  document.getElementById('share-url-input').value = shareURL;
+  document.getElementById('share-box').style.display='block';
+  document.getElementById('share-box').scrollIntoView({behavior:'smooth'});
+  showToast('🔗 Shareable link generated!');
+}
+function copyShareURL(){
+  copyURL(document.getElementById('share-url-input').value);
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — LOAD SHARED SESSION
+// ═══════════════════════════════════════════
+function checkSharedSession(){
+  if(sharedSessionChecked) return;
+  sharedSessionChecked = true;
+  const params  = new URLSearchParams(window.location.search);
+  const session = params.get('pbsession');
+  if(!session) return;
+  try{
+    const data = JSON.parse(decodeURIComponent(escape(atob(session))));
+    if(data.headend) document.getElementById('pb-headend').value = data.headend;
+    onHeadendChange();
+    if(data.format)  document.getElementById('pb-format').value  = data.format;
+    if(data.suppressed){
+      document.getElementById('pb-suppressed').checked = true;
+      toggleSuppressed();
+    }
+    if(data.rows){ document.getElementById('pb-rows').value = data.rows; }
+    if(data.cols){ document.getElementById('pb-cols').value = data.cols; }
+    if(data.tileSize){ document.getElementById('pb-tile-size').value = data.tileSize; }
+    if(data.entries && data.entries.length){
+      const lines = data.entries.map(e=>`${e.channel}\t${e.eventId}`).join('\n');
+      document.getElementById('pb-input').value = lines;
+      showToast('🔗 Shared session loaded! Generating URLs…');
+      setTimeout(()=>{
+        generateURLs();
+        setTimeout(()=>startPlayback(), 800);
+      }, 600);
+    }
+  } catch(err){
+    console.warn('Invalid shared session:', err);
+  }
+}
+
+// ═══════════════════════════════════════════
+// TOAST NOTIFICATION
+// ═══════════════════════════════════════════
+function showToast(msg){
+  let toast = document.getElementById('dz-toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'dz-toast';
+    toast.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--accent-green);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;max-width:320px;`;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity='1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(()=>{ toast.style.opacity='0'; }, 2800);
+}
+
+// ═══════════════════════════════════════════
+// LOAD HLS.JS + DASH.JS DYNAMICALLY
+// ═══════════════════════════════════════════
+(function loadPlayerLibs(){
+  if(!window.Hls){
+    const s = document.createElement('script');
+    s.src   = 'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  if(!window.dashjs){
+    const s = document.createElement('script');
+    s.src   = 'https://cdn.dashjs.org/latest/dash.all.min.js';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+})();
+
+// ═══════════════════════════════════════════
+// INIT — AUTO SWITCH TO PLAYBACK IF SHARED SESSION
+// ═══════════════════════════════════════════
+window.addEventListener('load',()=>{
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('pbsession')){
+    const pbBtn = document.querySelectorAll('.tab-btn')[1];
+    if(pbBtn) switchTab('playback', pbBtn);
+  }
+});
+</script>
+
+</body>
+</html>
