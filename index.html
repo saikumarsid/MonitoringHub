@@ -33,8 +33,6 @@ a{text-decoration:none;color:inherit}
 ::-webkit-scrollbar-track{background:var(--bg-primary)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--border-hover)}
-
-/* TOP NAV */
 .topnav{position:sticky;top:0;z-index:300;background:var(--bg-secondary);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);}
 .nav-brand{display:flex;align-items:center;gap:12px}
 .nav-logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a623,#e8920a);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#000;box-shadow:0 0 18px rgba(245,166,35,.4);flex-shrink:0;}
@@ -47,8 +45,6 @@ a{text-decoration:none;color:inherit}
 .clock{font-size:12px;font-weight:600;color:var(--text-secondary);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
 .theme-btn{width:36px;height:36px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:var(--tr);}
 .theme-btn:hover{background:var(--bg-card-hover);border-color:var(--border-hover)}
-
-/* TAB NAV */
 .tab-nav{display:flex;align-items:center;gap:4px;background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0 28px;}
 .tab-btn{display:flex;align-items:center;gap:7px;padding:12px 18px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:var(--tr);white-space:nowrap;}
 .tab-btn:hover{color:var(--text-primary)}
@@ -56,8 +52,6 @@ a{text-decoration:none;color:inherit}
 .tab-btn .tab-icon{font-size:15px}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
-
-/* LAYOUT */
 .layout{display:flex;min-height:calc(100vh - 110px)}
 .sidebar{width:215px;flex-shrink:0;background:var(--bg-secondary);border-right:1px solid var(--border);padding:18px 10px;position:sticky;top:110px;height:calc(100vh - 110px);overflow-y:auto;}
 .sb-label{font-size:10px;font-weight:700;letter-spacing:1.3px;color:var(--text-muted);text-transform:uppercase;padding:0 8px;margin-bottom:6px;margin-top:18px;}
@@ -68,8 +62,6 @@ a{text-decoration:none;color:inherit}
 .sb-icon{font-size:14px;width:18px;text-align:center}
 .sb-count{margin-left:auto;font-size:10px;font-weight:700;background:var(--bg-primary);border:1px solid var(--border);border-radius:10px;padding:1px 6px;color:var(--text-muted);}
 .main{flex:1;padding:26px 30px;overflow-x:hidden}
-
-/* MONITORING SHARED */
 .page-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;}
 .page-header h1{font-size:22px;font-weight:800;color:var(--text-primary);letter-spacing:-.5px}
 .page-header p{font-size:12.5px;color:var(--text-secondary);margin-top:4px}
@@ -114,6 +106,33 @@ a{text-decoration:none;color:inherit}
 .add-tool-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--bg-card);border:2px dashed var(--border);border-radius:var(--r-md);padding:17px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:var(--tr);min-height:120px;}
 .add-tool-btn:hover{border-color:var(--accent-blue);color:var(--accent-blue);background:rgba(74,158,255,.05);transform:translateY(-2px);}
 .add-tool-btn span{font-size:20px}
+
+/* ── THREE DOT MENU for manual cards ── */
+.card-menu-wrap{position:relative;flex-shrink:0;}
+.card-three-dot{width:24px;height:24px;border-radius:5px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-muted);transition:var(--tr);line-height:1;padding:0;}
+.card-three-dot:hover{background:var(--bg-card-hover);color:var(--text-primary);}
+.card-dropdown{position:absolute;top:28px;right:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);z-index:250;min-width:150px;overflow:hidden;display:none;}
+.card-dropdown.open{display:block;}
+.card-dropdown-item{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:12px;font-weight:600;color:var(--accent-red);cursor:pointer;transition:var(--tr);}
+.card-dropdown-item:hover{background:rgba(248,113,113,.1);}
+
+/* ── MANUAL BADGE ── */
+.manual-badge{position:absolute;top:8px;left:8px;font-size:8px;font-weight:700;background:rgba(167,139,250,.2);color:var(--accent-purple);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:1px 6px;letter-spacing:.4px;text-transform:uppercase;pointer-events:none;}
+
+/* ── CONFIRM DELETE MODAL ── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:opacity .25s;}
+.confirm-overlay.open{opacity:1;pointer-events:all}
+.confirm-box{background:var(--bg-card);border:1px solid rgba(248,113,113,.3);border-radius:var(--r-md);padding:28px;width:100%;max-width:360px;box-shadow:var(--shadow-lg);transform:translateY(16px);transition:transform .25s;text-align:center;}
+.confirm-overlay.open .confirm-box{transform:translateY(0)}
+.confirm-icon{font-size:36px;margin-bottom:12px;}
+.confirm-title{font-size:16px;font-weight:800;color:var(--text-primary);margin-bottom:6px;}
+.confirm-sub{font-size:12.5px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6;}
+.confirm-actions{display:flex;gap:10px;justify-content:center;}
+.confirm-cancel-btn{padding:9px 22px;border-radius:6px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;transition:var(--tr);}
+.confirm-cancel-btn:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.confirm-delete-btn{padding:9px 22px;border-radius:6px;background:linear-gradient(135deg,var(--accent-red),#e05555);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr);}
+.confirm-delete-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(248,113,113,.35)}
+
 .t-blue{--ca:var(--accent-blue);--ci:rgba(74,158,255,.12);--cb:rgba(74,158,255,.08);--cc:rgba(74,158,255,.22)}
 .t-green{--ca:var(--accent-green);--ci:rgba(62,207,142,.12);--cb:rgba(62,207,142,.08);--cc:rgba(62,207,142,.22)}
 .t-purple{--ca:var(--accent-purple);--ci:rgba(167,139,250,.12);--cb:rgba(167,139,250,.08);--cc:rgba(167,139,250,.22)}
@@ -166,9 +185,7 @@ a{text-decoration:none;color:inherit}
 .modal-save{padding:8px 18px;border-radius:6px;background:var(--accent-blue);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr);}
 .modal-save:hover{background:#3a8eef;box-shadow:0 4px 12px rgba(74,158,255,.35)}
 
-/* ═══════════════════════════════════════════
-   PLAYBACK TAB
-═══════════════════════════════════════════ */
+/* PLAYBACK TAB */
 .pb-wrap{padding:24px 28px;min-height:calc(100vh - 110px);background:var(--bg-primary);}
 .pb-control-panel{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-md);padding:20px 24px;margin-bottom:20px;}
 .pb-control-title{font-size:14px;font-weight:800;color:var(--text-primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
@@ -187,12 +204,8 @@ a{text-decoration:none;color:inherit}
 .pb-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text-secondary);user-select:none;}
 .pb-toggle input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent-blue);cursor:pointer;}
 .pb-toggle:hover{color:var(--text-primary)}
-
-/* Suppressed indicator */
 .suppressed-indicator{display:none;align-items:center;gap:8px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);border-radius:var(--r-sm);padding:8px 14px;font-size:12px;font-weight:600;color:var(--accent-orange);margin-bottom:14px;}
 .suppressed-indicator.visible{display:flex;}
-
-/* Action Buttons */
 .pb-action-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
 .pb-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;transition:var(--tr);border:none;letter-spacing:.3px;white-space:nowrap;}
 .pb-btn-primary{background:linear-gradient(135deg,var(--accent-blue),#3a8eef);color:#fff;box-shadow:0 4px 14px rgba(74,158,255,.3);}
@@ -206,8 +219,6 @@ a{text-decoration:none;color:inherit}
 .pb-btn-red{background:linear-gradient(135deg,var(--accent-red),#e05555);color:#fff;}
 .pb-btn-red:hover{transform:translateY(-1px);}
 .pb-btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
-
-/* URL Table */
 .pb-table-wrap{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:20px;overflow:hidden;}
 .pb-table-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
 .pb-table-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px;}
@@ -223,8 +234,6 @@ a{text-decoration:none;color:inherit}
 .status-ready{display:inline-flex;align-items:center;gap:5px;background:rgba(62,207,142,.14);color:var(--accent-green);border:1px solid rgba(62,207,142,.28);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;}
 .status-error{display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,.14);color:var(--accent-red);border:1px solid rgba(248,113,113,.28);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;}
 .status-loading{display:inline-flex;align-items:center;gap:5px;background:rgba(245,166,35,.14);color:var(--accent-dazn);border:1px solid rgba(245,166,35,.28);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;}
-
-/* Multiview Controls Bar */
 .pb-mv-controls{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;}
 .pb-mv-ctrl-group{display:flex;align-items:center;gap:7px;}
 .pb-mv-ctrl-group label{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
@@ -232,11 +241,7 @@ a{text-decoration:none;color:inherit}
 .pb-mv-ctrl-group select:focus,.pb-mv-ctrl-group input[type=number]:focus{border-color:var(--accent-blue);}
 .pb-mv-divider{width:1px;height:28px;background:var(--border);flex-shrink:0;}
 .utc-clock{font-size:13px;font-weight:700;color:var(--accent-cyan);font-variant-numeric:tabular-nums;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:6px;padding:5px 12px;letter-spacing:.5px;white-space:nowrap;}
-
-/* Playback Grid — dynamic rows×cols via CSS variables */
 .pb-grid{display:grid;gap:10px;transition:var(--tr);}
-
-/* Playback Tile */
 .pb-tile{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--r-md);overflow:hidden;transition:border-color .4s,box-shadow .4s;position:relative;cursor:grab;}
 .pb-tile:active{cursor:grabbing}
 .pb-tile.health-good{border-color:var(--accent-green);box-shadow:0 0 16px rgba(62,207,142,.25);}
@@ -253,8 +258,6 @@ a{text-decoration:none;color:inherit}
 .pb-tile-controls{display:flex;align-items:center;gap:3px;flex-shrink:0;}
 .pb-tile-btn{width:24px;height:24px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:var(--tr);color:var(--text-secondary);}
 .pb-tile-btn:hover{background:rgba(255,255,255,.16);color:var(--text-primary);}
-
-/* Video wrapper — aspect ratio box */
 .pb-tile-video-wrap{position:relative;width:100%;background:#000;overflow:hidden;}
 .pb-tile-video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;}
 .pb-tile-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#0a0c10,#1a1e2a);}
@@ -272,22 +275,16 @@ a{text-decoration:none;color:inherit}
 .pb-tile-health-bar.bad{background:var(--accent-red);}
 .pb-tile-health-bar.loading{background:var(--accent-dazn);animation:hbpulse 1s ease-in-out infinite;}
 @keyframes hbpulse{0%,100%{opacity:1}50%{opacity:.25}}
-
-/* Share box */
 .share-box{background:var(--bg-secondary);border:1px solid rgba(62,207,142,.3);border-radius:var(--r-md);padding:18px 20px;margin-bottom:20px;}
 .share-box-title{font-size:13px;font-weight:700;color:var(--accent-green);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 .share-url-row{display:flex;gap:8px;}
 .share-url-input{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 12px;font-size:11.5px;color:var(--accent-blue);font-family:'Courier New',monospace;outline:none;min-width:0;}
 .copy-btn{padding:9px 16px;border-radius:var(--r-sm);background:var(--accent-green);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:var(--tr);white-space:nowrap;}
 .copy-btn:hover{background:#2db87a;}
-
-/* Empty state */
 .pb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;gap:14px;text-align:center;grid-column:1/-1;}
 .pb-empty-icon{font-size:52px;opacity:.25;}
 .pb-empty-title{font-size:16px;font-weight:700;color:var(--text-secondary);}
 .pb-empty-sub{font-size:12.5px;color:var(--text-muted);max-width:400px;line-height:1.7;}
-
-/* Responsive */
 @media(max-width:900px){.sidebar{display:none}.main{padding:18px 14px}.pb-wrap{padding:14px 12px}}
 @media(max-width:600px){.topnav{padding:0 14px}.nav-subtitle{display:none}.stats-bar{grid-template-columns:1fr 1fr}.page-header{flex-direction:column}.search-wrap{min-width:unset;width:100%}.tab-btn{padding:10px 10px;font-size:11px}.pb-control-grid{grid-template-columns:1fr 1fr}}
 </style>
@@ -312,17 +309,15 @@ a{text-decoration:none;color:inherit}
 
 <!-- TAB NAV -->
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('monitoring',this)">
+  <button class="tab-btn active" id="tab-btn-monitoring" onclick="switchTab('monitoring',this)">
     <span class="tab-icon">🖥️</span> Monitoring Hub
   </button>
-  <button class="tab-btn" onclick="switchTab('playback',this)">
+  <button class="tab-btn" id="tab-btn-playback" onclick="switchTab('playback',this)">
     <span class="tab-icon">▶️</span> Playback Dashboard
   </button>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TAB 1 — MONITORING HUB (UNCHANGED)
-═══════════════════════════════════════════ -->
+<!-- TAB 1 — MONITORING HUB -->
 <div class="tab-panel active" id="tab-monitoring">
 <div class="layout">
 <aside class="sidebar">
@@ -362,7 +357,7 @@ a{text-decoration:none;color:inherit}
   </div>
   <div class="notice">
     <span style="font-size:15px;flex-shrink:0">💡</span>
-    <span>Chrome tabs auto-cycle every <strong>15 seconds</strong> on wall-mount screens. Use <strong>➕ Add Tool</strong> in any section to add new tools dynamically.</span>
+    <span>Chrome tabs auto-cycle every <strong>15 seconds</strong> on wall-mount screens. Use <strong>➕ Add Tool</strong> in any section to add new tools persistently.</span>
   </div>
 
   <!-- M2A -->
@@ -483,110 +478,31 @@ a{text-decoration:none;color:inherit}
 </div>
 </div><!-- end tab-monitoring -->
 
-<!-- ═══════════════════════════════════════════
-     TAB 2 — PLAYBACK DASHBOARD (UPDATED)
-═══════════════════════════════════════════ -->
+<!-- TAB 2 — PLAYBACK -->
 <div class="tab-panel" id="tab-playback">
 <div class="pb-wrap">
-
-  <!-- Control Panel -->
   <div class="pb-control-panel">
     <div class="pb-control-title">⚙️ Playback Configuration</div>
-
     <div class="pb-control-grid">
-      <div class="pb-field">
-        <label>Headend</label>
-        <select id="pb-headend" onchange="onHeadendChange()">
-          <option value="DCA">DCA – Ireland (M2A)</option>
-          <option value="DCB">DCB – Frankfurt (M2A)</option>
-          <option value="DCG">DCG – UK South (MK)</option>
-          <option value="DCH">DCH – West Europe (MK)</option>
-        </select>
-      </div>
-      <div class="pb-field">
-        <label>Stream Format</label>
-        <select id="pb-format">
-          <option value="HLS">HLS</option>
-          <option value="DASH">DASH</option>
-          <option value="Smooth">Smooth (M2A only)</option>
-        </select>
-      </div>
-      <div class="pb-field">
-        <label>Rows</label>
-        <input type="number" id="pb-rows" value="2" min="1" max="10" onchange="syncLayoutInputs()"/>
-      </div>
-      <div class="pb-field">
-        <label>Columns</label>
-        <input type="number" id="pb-cols" value="3" min="1" max="10" onchange="syncLayoutInputs()"/>
-      </div>
-      <div class="pb-field">
-        <label>Tile Size Template</label>
-        <select id="pb-tile-size" onchange="applyTileSize()">
-          <option value="auto">Auto (Responsive)</option>
-          <option value="320x180">320 × 180</option>
-          <option value="480x270">480 × 270</option>
-          <option value="640x360">640 × 360</option>
-          <option value="854x480">854 × 480</option>
-          <option value="1280x720">1280 × 720</option>
-          <option value="1920x1080">1920 × 1080</option>
-        </select>
-      </div>
-      <div class="pb-field">
-        <label>Refresh Interval</label>
-        <select id="pb-refresh">
-          <option value="0">Off</option>
-          <option value="10">10 sec</option>
-          <option value="15">15 sec</option>
-          <option value="30">30 sec</option>
-          <option value="60">1 min</option>
-          <option value="120">2 min</option>
-          <option value="300">5 min</option>
-        </select>
-      </div>
-      <div class="pb-field">
-        <label>Health Check</label>
-        <select id="pb-health-interval">
-          <option value="10">10 sec</option>
-          <option value="30" selected>30 sec</option>
-          <option value="60">1 min</option>
-          <option value="120">2 min</option>
-          <option value="0">Off</option>
-        </select>
-      </div>
-      <div class="pb-field">
-        <label>Delay (ms)</label>
-        <input type="number" id="pb-delay" value="0" min="0" max="30000" step="500"/>
-      </div>
+      <div class="pb-field"><label>Headend</label><select id="pb-headend" onchange="onHeadendChange();savePBState()"><option value="DCA">DCA – Ireland (M2A)</option><option value="DCB">DCB – Frankfurt (M2A)</option><option value="DCG">DCG – UK South (MK)</option><option value="DCH">DCH – West Europe (MK)</option></select></div>
+      <div class="pb-field"><label>Stream Format</label><select id="pb-format" onchange="savePBState()"><option value="HLS">HLS</option><option value="DASH">DASH</option><option value="Smooth">Smooth (M2A only)</option></select></div>
+      <div class="pb-field"><label>Rows</label><input type="number" id="pb-rows" value="2" min="1" max="10" onchange="syncLayoutInputs();savePBState()"/></div>
+      <div class="pb-field"><label>Columns</label><input type="number" id="pb-cols" value="3" min="1" max="10" onchange="syncLayoutInputs();savePBState()"/></div>
+      <div class="pb-field"><label>Tile Size Template</label><select id="pb-tile-size" onchange="applyTileSize();savePBState()"><option value="auto">Auto (Responsive)</option><option value="320x180">320 × 180</option><option value="480x270">480 × 270</option><option value="640x360">640 × 360</option><option value="854x480">854 × 480</option><option value="1280x720">1280 × 720</option><option value="1920x1080">1920 × 1080</option></select></div>
+      <div class="pb-field"><label>Refresh Interval</label><select id="pb-refresh" onchange="savePBState()"><option value="0">Off</option><option value="10">10 sec</option><option value="15">15 sec</option><option value="30">30 sec</option><option value="60">1 min</option><option value="120">2 min</option><option value="300">5 min</option></select></div>
+      <div class="pb-field"><label>Health Check</label><select id="pb-health-interval" onchange="savePBState()"><option value="10">10 sec</option><option value="30" selected>30 sec</option><option value="60">1 min</option><option value="120">2 min</option><option value="0">Off</option></select></div>
+      <div class="pb-field"><label>Delay (ms)</label><input type="number" id="pb-delay" value="0" min="0" max="30000" step="500" onchange="savePBState()"/></div>
     </div>
-
-    <!-- Suppressed Mode Indicator (no token field) -->
-    <div class="suppressed-indicator" id="suppressed-indicator">
-      🔐 <strong>Suppressed Event Mode ACTIVE</strong> — Hardcoded token URLs will be used for DCG/DCH
-    </div>
-
-    <!-- Toggle Row -->
+    <div class="suppressed-indicator" id="suppressed-indicator">🔐 <strong>Suppressed Event Mode ACTIVE</strong> — Hardcoded token URLs will be used for DCG/DCH</div>
     <div class="pb-toggle-row">
-      <label class="pb-toggle">
-        <input type="checkbox" id="pb-suppressed" onchange="toggleSuppressed()"/>
-        🔐 Suppressed Event Mode
-      </label>
-      <label class="pb-toggle">
-        <input type="checkbox" id="pb-drag" checked/>
-        ✋ Enable Drag &amp; Move
-      </label>
-      <label class="pb-toggle">
-        <input type="checkbox" id="pb-mute-all" onchange="toggleMuteAll()"/>
-        🔇 Mute All
-      </label>
+      <label class="pb-toggle"><input type="checkbox" id="pb-suppressed" onchange="toggleSuppressed();savePBState()"/>🔐 Suppressed Event Mode</label>
+      <label class="pb-toggle"><input type="checkbox" id="pb-drag" checked onchange="savePBState()"/>✋ Enable Drag &amp; Move</label>
+      <label class="pb-toggle"><input type="checkbox" id="pb-mute-all" onchange="toggleMuteAll();savePBState()"/>🔇 Mute All</label>
     </div>
-
-    <!-- Input Area -->
     <div class="pb-textarea-wrap">
       <label>📋 Paste Channel Numbers &amp; Event IDs (Tab or Space separated, one per line)</label>
-      <textarea class="pb-textarea" id="pb-input" placeholder="2654    rrlk3d2kppqh19nra0d1g12ut&#10;2660    io5ai49adbea1bi28nkn9w1e1&#10;2653    1qetkj44fjb3q115tf9b53jidz&#10;2656    4c57nk9pv9f51tkjpgv44xoyt&#10;2659    1qetkj44fjb3q115tf9b53jidz"></textarea>
+      <textarea class="pb-textarea" id="pb-input" placeholder="2654    rrlk3d2kppqh19nra0d1g12ut&#10;2660    io5ai49adbea1bi28nkn9w1e1&#10;2653    1qetkj44fjb3q115tf9b53jidz&#10;2656    4c57nk9pv9f51tkjpgv44xoyt&#10;2659    1qetkj44fjb3q115tf9b53jidz" oninput="savePBState()"></textarea>
     </div>
-
-    <!-- Action Buttons -->
     <div class="pb-action-row">
       <button class="pb-btn pb-btn-primary" onclick="generateURLs()">⚡ Generate Playback URLs</button>
       <button class="pb-btn pb-btn-green" onclick="startPlayback()" id="pb-play-btn" disabled>▶ Start Playback</button>
@@ -596,73 +512,27 @@ a{text-decoration:none;color:inherit}
       <button class="pb-btn pb-btn-red" onclick="stopAll()" id="pb-stop-btn" style="display:none">⏹ Stop All</button>
     </div>
   </div>
-
-  <!-- Share Box -->
   <div class="share-box" id="share-box" style="display:none">
     <div class="share-box-title">🔗 Shareable Playback Session — Single Link for All Tiles</div>
-    <div class="share-url-row">
-      <input type="text" class="share-url-input" id="share-url-input" readonly/>
-      <button class="copy-btn" onclick="copyShareURL()">📋 Copy Link</button>
-    </div>
+    <div class="share-url-row"><input type="text" class="share-url-input" id="share-url-input" readonly/><button class="copy-btn" onclick="copyShareURL()">📋 Copy Link</button></div>
   </div>
-
-  <!-- URL Table -->
   <div class="pb-table-wrap" id="pb-table-wrap" style="display:none">
     <div class="pb-table-header">
       <div class="pb-table-title">📋 Generated Playback URLs <span id="pb-url-count" style="font-size:11px;color:var(--text-muted);font-weight:400"></span></div>
-      <div class="pb-table-actions">
-        <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="exportCSV()">📥 CSV</button>
-        <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="copyAllURLs()">📋 Copy All</button>
-      </div>
+      <div class="pb-table-actions"><button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="exportCSV()">📥 CSV</button><button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="copyAllURLs()">📋 Copy All</button></div>
     </div>
     <div style="overflow-x:auto">
-      <table class="pb-table" id="pb-url-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Channel No</th>
-            <th>Event ID</th>
-            <th>Headend</th>
-            <th>Format</th>
-            <th>Generated URL</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="pb-url-tbody"></tbody>
-      </table>
+      <table class="pb-table"><thead><tr><th>#</th><th>Channel No</th><th>Event ID</th><th>Headend</th><th>Format</th><th>Generated URL</th><th>Status</th><th>Action</th></tr></thead><tbody id="pb-url-tbody"></tbody></table>
     </div>
   </div>
-
-  <!-- Multiview Live Controls Bar -->
   <div class="pb-mv-controls" id="pb-mv-controls" style="display:none">
     <div class="utc-clock" id="utc-clock">UTC --:--:--</div>
     <div class="pb-mv-divider"></div>
-    <div class="pb-mv-ctrl-group">
-      <label>Rows</label>
-      <input type="number" id="mv-rows-live" value="2" min="1" max="10" onchange="applyGridLayout()"/>
-    </div>
-    <div class="pb-mv-ctrl-group">
-      <label>Cols</label>
-      <input type="number" id="mv-cols-live" value="3" min="1" max="10" onchange="applyGridLayout()"/>
-    </div>
-    <div class="pb-mv-ctrl-group">
-      <label>Size</label>
-      <select id="mv-size-live" onchange="applyTileSizeLive()">
-        <option value="auto">Auto</option>
-        <option value="320x180">320×180</option>
-        <option value="480x270">480×270</option>
-        <option value="640x360">640×360</option>
-        <option value="854x480">854×480</option>
-        <option value="1280x720">1280×720</option>
-        <option value="1920x1080">1920×1080</option>
-      </select>
-    </div>
+    <div class="pb-mv-ctrl-group"><label>Rows</label><input type="number" id="mv-rows-live" value="2" min="1" max="10" onchange="applyGridLayout();savePBState()"/></div>
+    <div class="pb-mv-ctrl-group"><label>Cols</label><input type="number" id="mv-cols-live" value="3" min="1" max="10" onchange="applyGridLayout();savePBState()"/></div>
+    <div class="pb-mv-ctrl-group"><label>Size</label><select id="mv-size-live" onchange="applyTileSizeLive();savePBState()"><option value="auto">Auto</option><option value="320x180">320×180</option><option value="480x270">480×270</option><option value="640x360">640×360</option><option value="854x480">854×480</option><option value="1280x720">1280×720</option><option value="1920x1080">1920×1080</option></select></div>
     <div class="pb-mv-divider"></div>
-    <div class="pb-mv-ctrl-group">
-      <label>Filter</label>
-      <input type="text" id="mv-filter" placeholder="Channel…" style="width:90px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text-primary);outline:none;" oninput="filterTiles(this.value)"/>
-    </div>
+    <div class="pb-mv-ctrl-group"><label>Filter</label><input type="text" id="mv-filter" placeholder="Channel…" style="width:90px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text-primary);outline:none;" oninput="filterTiles(this.value)"/></div>
     <div class="pb-mv-divider"></div>
     <div class="pb-mv-ctrl-group">
       <button class="pb-btn pb-btn-ghost" style="padding:5px 12px;font-size:11px" onclick="muteAllTiles()">🔇 Mute All</button>
@@ -671,8 +541,6 @@ a{text-decoration:none;color:inherit}
       <button class="pb-btn pb-btn-red" style="padding:5px 12px;font-size:11px" onclick="stopAll()">⏹ Stop All</button>
     </div>
   </div>
-
-  <!-- Playback Grid -->
   <div class="pb-grid" id="pb-grid">
     <div class="pb-empty" id="pb-empty-state">
       <div class="pb-empty-icon">▶️</div>
@@ -680,7 +548,6 @@ a{text-decoration:none;color:inherit}
       <div class="pb-empty-sub">Paste your Channel Numbers &amp; Event IDs above, select Headend &amp; Format, then click <strong>⚡ Generate Playback URLs</strong> followed by <strong>▶ Start Playback</strong>.</div>
     </div>
   </div>
-
 </div>
 </div><!-- end tab-playback -->
 
@@ -714,7 +581,29 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<!-- CONFIRM DELETE MODAL -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title" id="confirm-title">Remove Tool?</div>
+    <div class="confirm-sub" id="confirm-sub">This tool will be permanently removed.</div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel-btn" onclick="closeConfirm()">Cancel</button>
+      <button class="confirm-delete-btn" onclick="executeConfirm()">Remove</button>
+    </div>
+  </div>
+</div>
+
 <script>
+// ═══════════════════════════════════════════
+// STORAGE KEYS
+// ═══════════════════════════════════════════
+const LS_MANUAL_TOOLS = 'dazn_manual_tools_v1';
+const LS_ACTIVE_TAB   = 'dazn_active_tab_v1';
+const LS_PB_STATE     = 'dazn_pb_state_v1';
+const LS_PB_ENTRIES   = 'dazn_pb_entries_v1';
+const LS_THEME        = 'dazn_theme_v1';
+
 // ═══════════════════════════════════════════
 // CLOCK
 // ═══════════════════════════════════════════
@@ -726,33 +615,45 @@ function updateClock(){
   const ft = document.getElementById('footerTime');
   if(ft) ft.textContent = d+' · '+t;
   const utc = document.getElementById('utc-clock');
-  if(utc){
-    const utcStr = new Date().toUTCString();
-    utc.textContent = 'UTC '+utcStr.split(' ')[4];
-  }
+  if(utc) utc.textContent = 'UTC '+new Date().toUTCString().split(' ')[4];
 }
 setInterval(updateClock,1000);
 updateClock();
 
 // ═══════════════════════════════════════════
-// THEME
+// THEME — persistent
 // ═══════════════════════════════════════════
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  document.getElementById('themeBtn').textContent = theme==='dark'?'🌙':'☀️';
+  localStorage.setItem(LS_THEME,theme);
+}
 document.getElementById('themeBtn').addEventListener('click',()=>{
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme')==='dark';
-  html.setAttribute('data-theme', isDark?'light':'dark');
-  document.getElementById('themeBtn').textContent = isDark?'☀️':'🌙';
+  applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
 });
 
 // ═══════════════════════════════════════════
-// TAB SWITCHING
+// TAB SWITCHING — persistent (FIX #3)
 // ═══════════════════════════════════════════
 function switchTab(tab, btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
+  // Save active tab to localStorage
+  localStorage.setItem(LS_ACTIVE_TAB, tab);
   if(tab==='playback') checkSharedSession();
+}
+
+function restoreActiveTab(){
+  const saved = localStorage.getItem(LS_ACTIVE_TAB) || 'monitoring';
+  const btn   = document.getElementById('tab-btn-'+saved);
+  if(btn){
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('tab-'+saved).classList.add('active');
+    btn.classList.add('active');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -763,7 +664,7 @@ function filterCards(query){
   document.querySelectorAll('.card').forEach(card=>{
     const name=(card.getAttribute('data-name')||'').toLowerCase();
     const text=card.innerText.toLowerCase();
-    card.classList.toggle('hidden', q!==''&&!name.includes(q)&&!text.includes(q));
+    card.classList.toggle('hidden',q!==''&&!name.includes(q)&&!text.includes(q));
   });
   document.querySelectorAll('.section').forEach(section=>{
     const cards=section.querySelectorAll('.card');
@@ -773,7 +674,7 @@ function filterCards(query){
 }
 
 // ═══════════════════════════════════════════
-// MONITORING — SIDEBAR SCROLL SPY
+// SIDEBAR SCROLL SPY
 // ═══════════════════════════════════════════
 const sbItems = document.querySelectorAll('.sb-item');
 sbItems.forEach(item=>{
@@ -796,23 +697,40 @@ const observer = new IntersectionObserver((entries)=>{
 sections.forEach(s=>observer.observe(s));
 
 // ═══════════════════════════════════════════
-// ADD TOOL MODAL
+// MANUAL TOOLS — localStorage helpers (FIX #1)
 // ═══════════════════════════════════════════
-let currentGridId='';
-let currentTheme='t-blue';
-function openModal(gridId,theme){
-  currentGridId=gridId; currentTheme=theme;
-  const names={'m2a':'M2A Media','mk-linear':'MediaKind Linear','mk-dcg':'MediaKind DCG','amagi':'Amagi','id3as':'ID3AS','conviva':'Conviva','newrelic':'New Relic','coralogix':'Coralogix','streams':'Stream Tools'};
-  document.getElementById('modalSub').textContent='Adding to: '+(names[gridId]||gridId);
-  document.getElementById('modalName').value='';
-  document.getElementById('modalDesc').value='';
-  document.getElementById('modalIcon').value='🔗';
-  document.getElementById('modalTag').value='TOOL';
-  document.getElementById('modalTagType').value='tag-mon';
-  document.getElementById('modalLinkLabel1').value='Open';
-  document.getElementById('modalUrl1').value='';
-  document.getElementById('modalLinkLabel2').value='';
-  document.getElementById('modalUrl2').value='';
+function getManualTools(){
+  try{ return JSON.parse(localStorage.getItem(LS_MANUAL_TOOLS)||'[]'); }
+  catch(e){ return []; }
+}
+function saveManualTools(tools){
+  localStorage.setItem(LS_MANUAL_TOOLS, JSON.stringify(tools));
+}
+
+// ═══════════════════════════════════════════
+// ADD TOOL MODAL — opens modal
+// ═══════════════════════════════════════════
+let currentGridId = '';
+let currentTheme  = 't-blue';
+
+function openModal(gridId, theme){
+  currentGridId = gridId;
+  currentTheme  = theme;
+  const names = {
+    'm2a':'M2A Media','mk-linear':'MediaKind Linear','mk-dcg':'MediaKind DCG',
+    'amagi':'Amagi','id3as':'ID3AS','conviva':'Conviva',
+    'newrelic':'New Relic','coralogix':'Coralogix','streams':'Stream Tools'
+  };
+  document.getElementById('modalSub').textContent = 'Adding to: '+(names[gridId]||gridId);
+  document.getElementById('modalName').value       = '';
+  document.getElementById('modalDesc').value       = '';
+  document.getElementById('modalIcon').value       = '🔗';
+  document.getElementById('modalTag').value        = 'TOOL';
+  document.getElementById('modalTagType').value    = 'tag-mon';
+  document.getElementById('modalLinkLabel1').value = 'Open';
+  document.getElementById('modalUrl1').value       = '';
+  document.getElementById('modalLinkLabel2').value = '';
+  document.getElementById('modalUrl2').value       = '';
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal(){
@@ -821,319 +739,401 @@ function closeModal(){
 document.getElementById('modalOverlay').addEventListener('click',function(e){
   if(e.target===this) closeModal();
 });
+
+// ═══════════════════════════════════════════
+// SAVE CARD — saves to localStorage + renders (FIX #1)
+// ═══════════════════════════════════════════
 function saveCard(){
-  const name=document.getElementById('modalName').value.trim();
-  const url1=document.getElementById('modalUrl1').value.trim();
-  const label1=document.getElementById('modalLinkLabel1').value.trim()||'Open';
-  if(!name){alert('Please enter a Tool Name.');return;}
-  if(!url1){alert('Please enter at least one URL.');return;}
-  const desc=document.getElementById('modalDesc').value.trim()||'Custom tool added by SES Engineering team.';
-  const icon=document.getElementById('modalIcon').value.trim()||'🔗';
-  const tagLabel=document.getElementById('modalTag').value.trim().toUpperCase()||'TOOL';
-  const tagType=document.getElementById('modalTagType').value;
-  const url2=document.getElementById('modalUrl2').value.trim();
-  const label2=document.getElementById('modalLinkLabel2').value.trim();
-  let btnHtml='';
-  if(url2&&label2){
-    btnHtml=`<div class="btn-row"><a href="$${url1}" target="_blank" class="btn-sm">$${label1} ↗</a><a href="$${url2}" target="_blank" class="btn-sm">$${label2} ↗</a></div>`;
-  } else {
-    btnHtml=`<a href="$${url1}" target="_blank" class="btn">$${label1} ↗</a>`;
-  }
-  const cardHtml=`
-    <div class="card $${currentTheme}" data-name="$${name.toLowerCase()} custom">
-      <div class="card-top"><div class="card-ico">$${icon}</div><span class="card-tag $${tagType}">${tagLabel}</span></div>
-      <div class="card-name">${name}</div>
-      <div class="card-desc">${desc}</div>
-      ${btnHtml}
-    </div>`;
-  const grid=document.getElementById('grid-'+currentGridId);
-  const addBtn=grid.querySelector('.add-tool-btn');
-  addBtn.insertAdjacentHTML('beforebegin',cardHtml);
-  const totalEl=document.getElementById('totalLinks');
-  if(totalEl) totalEl.textContent=parseInt(totalEl.textContent)+1;
+  const name   = document.getElementById('modalName').value.trim();
+  const url1   = document.getElementById('modalUrl1').value.trim();
+  const label1 = document.getElementById('modalLinkLabel1').value.trim()||'Open';
+  if(!name){ alert('Please enter a Tool Name.'); return; }
+  if(!url1){ alert('Please enter at least one URL.'); return; }
+
+  const desc     = document.getElementById('modalDesc').value.trim()||'Custom tool added by SES Engineering team.';
+  const icon     = document.getElementById('modalIcon').value.trim()||'🔗';
+  const tagLabel = document.getElementById('modalTag').value.trim().toUpperCase()||'TOOL';
+  const tagType  = document.getElementById('modalTagType').value;
+  const url2     = document.getElementById('modalUrl2').value.trim();
+  const label2   = document.getElementById('modalLinkLabel2').value.trim();
+
+  // Generate unique ID
+  const toolId = 'tool_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+
+  const toolData = {
+    id: toolId,
+    gridId: currentGridId,
+    theme: currentTheme,
+    name, desc, icon, tagLabel, tagType,
+    url1, label1, url2, label2
+  };
+
+  // FIX #1: Save to localStorage FIRST
+  const tools = getManualTools();
+  tools.push(toolData);
+  saveManualTools(tools);
+
+  // Then render the card
+  renderManualCard(toolData);
+
+  const totalEl = document.getElementById('totalLinks');
+  if(totalEl) totalEl.textContent = parseInt(totalEl.textContent)+1;
+
   closeModal();
+  showToast('✅ Tool saved permanently!');
 }
 
 // ═══════════════════════════════════════════
-// PLAYBACK — HARDCODED URL TEMPLATES
+// RENDER MANUAL CARD — builds card HTML with 3-dot menu (FIX #2)
+// ═══════════════════════════════════════════
+function renderManualCard(tool){
+  // Prevent duplicate
+  if(document.getElementById('card-'+tool.id)) return;
+
+  let btnHtml = '';
+  if(tool.url2 && tool.label2){
+    btnHtml = `<div class="btn-row">
+      <a href="$${escHtml(tool.url1)}" target="_blank" class="btn-sm">$${escHtml(tool.label1)} ↗</a>
+      <a href="$${escHtml(tool.url2)}" target="_blank" class="btn-sm">$${escHtml(tool.label2)} ↗</a>
+    </div>`;
+  } else {
+    btnHtml = `<a href="$${escHtml(tool.url1)}" target="_blank" class="btn">$${escHtml(tool.label1)} ↗</a>`;
+  }
+
+  const card = document.createElement('div');
+  card.className = `card ${tool.theme} manual-card`;
+  card.id = 'card-'+tool.id;
+  card.setAttribute('data-name', tool.name.toLowerCase()+' custom manual');
+  card.innerHTML = `
+    <div class="manual-badge">CUSTOM</div>
+    <div class="card-top">
+      <div class="card-ico">${escHtml(tool.icon)}</div>
+      <div style="display:flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0">
+        <span class="card-tag $${tool.tagType}">$${escHtml(tool.tagLabel)}</span>
+        <div class="card-menu-wrap">
+          <button class="card-three-dot" onclick="toggleCardMenu(event,'menu-${tool.id}')" title="Options">⋮</button>
+          <div class="card-dropdown" id="menu-${tool.id}">
+            <div class="card-dropdown-item" onclick="promptDeleteTool('$${tool.id}','$${escHtml(tool.name)}')">
+              🗑️ Remove Tool
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-name">${escHtml(tool.name)}</div>
+    <div class="card-desc">${escHtml(tool.desc)}</div>
+    ${btnHtml}`;
+
+  const grid   = document.getElementById('grid-'+tool.gridId);
+  const addBtn = grid ? grid.querySelector('.add-tool-btn') : null;
+  if(addBtn) addBtn.before(card);
+  else if(grid) grid.appendChild(card);
+}
+
+// ═══════════════════════════════════════════
+// RESTORE MANUAL TOOLS on page load (FIX #1)
+// ═══════════════════════════════════════════
+function restoreManualTools(){
+  const tools = getManualTools();
+  tools.forEach(tool => renderManualCard(tool));
+  // Update total links count
+  const totalEl = document.getElementById('totalLinks');
+  if(totalEl && tools.length > 0){
+    totalEl.textContent = parseInt(totalEl.textContent) + tools.length;
+  }
+}
+
+// ═══════════════════════════════════════════
+// THREE DOT MENU TOGGLE
+// ═══════════════════════════════════════════
+function toggleCardMenu(e, menuId){
+  e.stopPropagation();
+  // Close all other open menus
+  document.querySelectorAll('.card-dropdown.open').forEach(m=>{
+    if(m.id !== menuId) m.classList.remove('open');
+  });
+  const menu = document.getElementById(menuId);
+  if(menu) menu.classList.toggle('open');
+}
+// Close menus on outside click
+document.addEventListener('click',()=>{
+  document.querySelectorAll('.card-dropdown.open').forEach(m=>m.classList.remove('open'));
+});
+
+// ═══════════════════════════════════════════
+// DELETE TOOL — confirm then remove (FIX #2)
+// ═══════════════════════════════════════════
+let pendingDeleteId   = null;
+let pendingDeleteName = '';
+
+function promptDeleteTool(toolId, toolName){
+  pendingDeleteId   = toolId;
+  pendingDeleteName = toolName;
+  document.getElementById('confirm-title').textContent = 'Remove Tool?';
+  document.getElementById('confirm-sub').textContent   = `"${toolName}" will be permanently removed from the dashboard.`;
+  document.getElementById('confirmOverlay').classList.add('open');
+  // Close dropdown
+  document.querySelectorAll('.card-dropdown.open').forEach(m=>m.classList.remove('open'));
+}
+function closeConfirm(){
+  document.getElementById('confirmOverlay').classList.remove('open');
+  pendingDeleteId   = null;
+  pendingDeleteName = '';
+}
+function executeConfirm(){
+  if(!pendingDeleteId) return;
+  // FIX #2: Remove from localStorage FIRST
+  const tools = getManualTools().filter(t => t.id !== pendingDeleteId);
+  saveManualTools(tools);
+  // Then remove from DOM immediately
+  const card = document.getElementById('card-'+pendingDeleteId);
+  if(card) card.remove();
+  // Update total links count
+  const totalEl = document.getElementById('totalLinks');
+  if(totalEl) totalEl.textContent = Math.max(0, parseInt(totalEl.textContent)-1);
+  closeConfirm();
+  showToast('🗑️ Tool removed successfully!');
+}
+document.getElementById('confirmOverlay').addEventListener('click',function(e){
+  if(e.target===this) closeConfirm();
+});
+
+// ═══════════════════════════════════════════
+// PLAYBACK — SAVE STATE (FIX #3)
+// ═══════════════════════════════════════════
+function savePBState(){
+  const state = {
+    headend        : document.getElementById('pb-headend')?.value,
+    format         : document.getElementById('pb-format')?.value,
+    rows           : document.getElementById('pb-rows')?.value,
+    cols           : document.getElementById('pb-cols')?.value,
+    tileSize       : document.getElementById('pb-tile-size')?.value,
+    refresh        : document.getElementById('pb-refresh')?.value,
+    healthInterval : document.getElementById('pb-health-interval')?.value,
+    delay          : document.getElementById('pb-delay')?.value,
+    suppressed     : document.getElementById('pb-suppressed')?.checked,
+    drag           : document.getElementById('pb-drag')?.checked,
+    muteAll        : document.getElementById('pb-mute-all')?.checked,
+    input          : document.getElementById('pb-input')?.value,
+    tableVisible   : document.getElementById('pb-table-wrap')?.style.display !== 'none',
+    mvVisible      : document.getElementById('pb-mv-controls')?.style.display !== 'none'
+  };
+  localStorage.setItem(LS_PB_STATE, JSON.stringify(state));
+  if(generatedEntries.length){
+    localStorage.setItem(LS_PB_ENTRIES, JSON.stringify(generatedEntries));
+  }
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — RESTORE STATE (FIX #3)
+// ═══════════════════════════════════════════
+function restorePBState(){
+  try{
+    const raw = localStorage.getItem(LS_PB_STATE);
+    if(!raw) return;
+    const s = JSON.parse(raw);
+    if(s.headend)        { document.getElementById('pb-headend').value          = s.headend; onHeadendChange(); }
+    if(s.format)         { document.getElementById('pb-format').value           = s.format; }
+    if(s.rows)           { document.getElementById('pb-rows').value             = s.rows; }
+    if(s.cols)           { document.getElementById('pb-cols').value             = s.cols; }
+    if(s.tileSize)       { document.getElementById('pb-tile-size').value        = s.tileSize; }
+    if(s.refresh)        { document.getElementById('pb-refresh').value          = s.refresh; }
+    if(s.healthInterval) { document.getElementById('pb-health-interval').value  = s.healthInterval; }
+    if(s.delay!=null)    { document.getElementById('pb-delay').value            = s.delay; }
+    if(s.suppressed)     { document.getElementById('pb-suppressed').checked     = true; toggleSuppressed(); }
+    if(s.drag!=null)     { document.getElementById('pb-drag').checked           = s.drag; }
+    if(s.muteAll)        { document.getElementById('pb-mute-all').checked       = s.muteAll; }
+    if(s.input)          { document.getElementById('pb-input').value            = s.input; }
+
+    // Restore generated entries
+    const savedEntries = localStorage.getItem(LS_PB_ENTRIES);
+    if(savedEntries){
+      generatedEntries = JSON.parse(savedEntries);
+      if(generatedEntries.length){
+        rebuildURLTable();
+        document.getElementById('pb-play-btn').disabled = false;
+        if(s.tableVisible) document.getElementById('pb-table-wrap').style.display = 'block';
+        if(s.mvVisible){
+          document.getElementById('pb-mv-controls').style.display = 'flex';
+          document.getElementById('pb-stop-btn').style.display    = 'inline-flex';
+          applyGridLayout();
+          // Restart playback tiles
+          setTimeout(()=>startPlayback(), 600);
+        }
+      }
+    }
+  } catch(e){ console.warn('Failed to restore PB state:',e); }
+}
+
+// ═══════════════════════════════════════════
+// REBUILD URL TABLE after restore
+// ═══════════════════════════════════════════
+function rebuildURLTable(){
+  const tbody = document.getElementById('pb-url-tbody');
+  tbody.innerHTML = '';
+  generatedEntries.forEach(e=>{
+    const safeUrl = e.url.replace(/'/g,"\\'");
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--text-muted);font-weight:600">${e.idx}</td>
+      <td style="font-weight:700;color:var(--text-primary)">${e.channel}</td>
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:var(--accent-cyan)">${e.eventId}</td>
+      <td><span style="font-weight:700;color:var(--accent-dazn)">$${e.headend}</span>$${e.suppressed?'<span style="margin-left:4px;font-size:9px;padding:1px 5px;border-radius:8px;background:rgba(251,146,60,.2);color:var(--accent-orange);border:1px solid rgba(251,146,60,.3)">SUP</span>':''}</td>
+      <td><span class="card-tag $${e.format==='HLS'?'tag-live':e.format==='DASH'?'tag-mon':'tag-dbg'}">$${e.format}</span></td>
+      <td><span class="pb-url-cell" title="$${e.url}" onclick="copyURL('$${safeUrl}')">${e.url}</span></td>
+      <td><span class="status-ready">● Ready</span></td>
+      <td><div style="display:flex;gap:4px">
+        <button class="pb-tile-btn" onclick="copyURL('${safeUrl}')">📋</button>
+        <button class="pb-tile-btn" onclick="window.open('${safeUrl}','_blank')">↗</button>
+      </div></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('pb-url-count').textContent = `(${generatedEntries.length} streams)`;
+}
+
+// ═══════════════════════════════════════════
+// PLAYBACK — HARDCODED TOKEN
 // ═══════════════════════════════════════════
 const HARDCODED_TOKEN = 'aHA5ZHpwc2NlOW5meXMwcmlteGFzZ3phOW15bmt0ZmRuYWEyaTI1MDlzMGttaXNmM2RvdzlodTN0YjQ5b3ZwZnA5Z2JvYmI2ZGoxZXo3djcwdDU5YjF5cjE1NzRseTNzN3NvYzNucHA1ZXJvZThvYnBvbWxqcmZjbDRvbzJ1dXA=';
-
 const URL_TEMPLATES = {
-  DCA:{
-    HLS:   'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/stream.m3u8?outlet=global',
-    DASH:  'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/stream.mpd?outlet=global',
-    Smooth:'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/Manifest?outlet=global'
-  },
-  DCB:{
-    HLS:   'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/stream.m3u8?outlet=global',
-    DASH:  'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/stream.mpd?outlet=global',
-    Smooth:'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/Manifest?outlet=global'
-  },
-  DCG:{
-    HLS:  'https://live-live-dazn-az-dcg-prda.uksouth-3.streaming.mediakind.com/cmaf/{EVENT_ID}/index.m3u8',
-    DASH: 'https://live-live-dazn-az-dcg-prda.uksouth-3.streaming.mediakind.com/cmaf/{EVENT_ID}/manifest.mpd',
-    Smooth: null
-  },
-  DCH:{
-    HLS:  'https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/cmaf/{EVENT_ID}/index.m3u8',
-    DASH: 'https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/cmaf/{EVENT_ID}/manifest.mpd',
-    Smooth: null
-  }
+  DCA:{HLS:'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/stream.m3u8?outlet=global',DASH:'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/stream.mpd?outlet=global',Smooth:'https://m2a-dazn-preview-dca.m2amedia.services/{EVENT_ID}/all/Manifest?outlet=global'},
+  DCB:{HLS:'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/stream.m3u8?outlet=global',DASH:'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/stream.mpd?outlet=global',Smooth:'https://m2a-dazn-preview-dcb.m2amedia.services/{EVENT_ID}/all/Manifest?outlet=global'},
+  DCG:{HLS:'https://live-live-dazn-az-dcg-prda.uksouth-3.streaming.mediakind.com/cmaf/{EVENT_ID}/index.m3u8',DASH:'https://live-live-dazn-az-dcg-prda.uksouth-3.streaming.mediakind.com/cmaf/{EVENT_ID}/manifest.mpd',Smooth:null},
+  DCH:{HLS:'https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/cmaf/{EVENT_ID}/index.m3u8',DASH:'https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/cmaf/{EVENT_ID}/manifest.mpd',Smooth:null}
 };
-
-// Suppressed templates — token is HARDCODED, only {EVENT_ID} changes
 const SUPPRESSED_TEMPLATES = {
-  DCG:{
-    HLS:  `https://dazn-dcg-prda.uksouth-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.m3u8`,
-    DASH: `https://dazn-dcg-prda.uksouth-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.mpd`
-  },
-  DCH:{
-    HLS:  `https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.m3u8`,
-    DASH: `https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/{EVENT_ID}-clear/${HARDCODED_TOKEN}/all/stream.mpd`
-  }
+  DCG:{HLS:`https://dazn-dcg-prda.uksouth-3.streaming.mediakind.com/{EVENT_ID}-clear/$${HARDCODED_TOKEN}/all/stream.m3u8`,DASH:`https://dazn-dcg-prda.uksouth-3.streaming.mediakind.com/{EVENT_ID}-clear/$${HARDCODED_TOKEN}/all/stream.mpd`},
+  DCH:{HLS:`https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/{EVENT_ID}-clear/$${HARDCODED_TOKEN}/all/stream.m3u8`,DASH:`https://live-live-dazn-az-dch-prda.westeurope-3.streaming.mediakind.com/{EVENT_ID}-clear/$${HARDCODED_TOKEN}/all/stream.mpd`}
 };
 
 // ═══════════════════════════════════════════
-// PLAYBACK — STATE
+// PLAYBACK STATE
 // ═══════════════════════════════════════════
-let generatedEntries = [];
-let healthTimers     = [];
-let refreshTimer     = null;
+let generatedEntries     = [];
+let healthTimers         = [];
+let refreshTimer         = null;
 let sharedSessionChecked = false;
 
-// ═══════════════════════════════════════════
-// PLAYBACK — HEADEND CHANGE
-// ═══════════════════════════════════════════
 function onHeadendChange(){
   const he  = document.getElementById('pb-headend').value;
   const fmt = document.getElementById('pb-format');
   const smooth = fmt.querySelector('option[value="Smooth"]');
-  if(he==='DCG'||he==='DCH'){
-    smooth.disabled=true;
-    smooth.textContent='Smooth (N/A for MK)';
-    if(fmt.value==='Smooth') fmt.value='HLS';
-  } else {
-    smooth.disabled=false;
-    smooth.textContent='Smooth (M2A only)';
-  }
+  if(he==='DCG'||he==='DCH'){ smooth.disabled=true; smooth.textContent='Smooth (N/A for MK)'; if(fmt.value==='Smooth') fmt.value='HLS'; }
+  else { smooth.disabled=false; smooth.textContent='Smooth (M2A only)'; }
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — SUPPRESSED TOGGLE (NO TOKEN FIELD)
-// ═══════════════════════════════════════════
 function toggleSuppressed(){
-  const checked = document.getElementById('pb-suppressed').checked;
-  const ind     = document.getElementById('suppressed-indicator');
-  ind.classList.toggle('visible', checked);
+  document.getElementById('suppressed-indicator').classList.toggle('visible',document.getElementById('pb-suppressed').checked);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — PARSE INPUT
-// ═══════════════════════════════════════════
 function parseInput(){
   const raw = document.getElementById('pb-input').value.trim();
   if(!raw) return [];
-  const lines = raw.split('\n').filter(l=>l.trim());
-  return lines.map(line=>{
+  return raw.split('\n').filter(l=>l.trim()).map(line=>{
     const parts = line.trim().split(/[\t\s]+/);
-    if(parts.length>=2) return {channel:parts[0].trim(), eventId:parts[1].trim()};
-    if(parts.length===1&&parts[0]) return {channel:'—', eventId:parts[0].trim()};
+    if(parts.length>=2) return {channel:parts[0].trim(),eventId:parts[1].trim()};
+    if(parts.length===1&&parts[0]) return {channel:'—',eventId:parts[0].trim()};
     return null;
   }).filter(Boolean);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — BUILD URL
-// ═══════════════════════════════════════════
-function buildURL(eventId, headend, format){
+function buildURL(eventId,headend,format){
   const suppressed = document.getElementById('pb-suppressed').checked;
-  if(suppressed && (headend==='DCG'||headend==='DCH')){
+  if(suppressed&&(headend==='DCG'||headend==='DCH')){
     const tpl = SUPPRESSED_TEMPLATES[headend]?.[format];
     if(!tpl) return null;
-    // Only EVENT_ID changes — token is already hardcoded in template
-    return tpl.replace('{EVENT_ID}', eventId);
+    return tpl.replace('{EVENT_ID}',eventId);
   }
   const tpl = URL_TEMPLATES[headend]?.[format];
   if(!tpl) return null;
-  return tpl.replace('{EVENT_ID}', eventId);
+  return tpl.replace('{EVENT_ID}',eventId);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — GENERATE URLs TABLE
-// ═══════════════════════════════════════════
 function generateURLs(){
   const entries = parseInput();
-  if(!entries.length){alert('Please paste at least one Channel Number and Event ID.');return;}
+  if(!entries.length){ alert('Please paste at least one Channel Number and Event ID.'); return; }
   const headend = document.getElementById('pb-headend').value;
   const format  = document.getElementById('pb-format').value;
-
   generatedEntries = entries.map((e,i)=>({
-    idx    : i+1,
-    channel: e.channel,
-    eventId: e.eventId,
-    headend,
-    format,
-    url    : buildURL(e.eventId, headend, format),
-    suppressed: document.getElementById('pb-suppressed').checked
+    idx:i+1, channel:e.channel, eventId:e.eventId, headend, format,
+    url:buildURL(e.eventId,headend,format),
+    suppressed:document.getElementById('pb-suppressed').checked
   })).filter(e=>e.url);
-
-  if(!generatedEntries.length){
-    alert('No valid URLs could be generated for the selected Headend/Format combination.');
-    return;
-  }
-
-  const tbody = document.getElementById('pb-url-tbody');
-  tbody.innerHTML='';
-  generatedEntries.forEach(e=>{
-    const safeUrl = e.url.replace(/'/g,"\\'");
-    const tr = document.createElement('tr');
-    tr.innerHTML=`
-      <td style="color:var(--text-muted);font-weight:600">${e.idx}</td>
-      <td style="font-weight:700;color:var(--text-primary)">${e.channel}</td>
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:var(--accent-cyan)">${e.eventId}</td>
-      <td><span style="font-weight:700;color:var(--accent-dazn)">$${e.headend}</span>$${e.suppressed?'<span class="badge-sup" style="margin-left:4px;font-size:9px;padding:1px 5px;border-radius:8px">SUP</span>':''}</td>
-      <td><span class="card-tag $${e.format==='HLS'?'tag-live':e.format==='DASH'?'tag-mon':'tag-dbg'}">$${e.format}</span></td>
-      <td><span class="pb-url-cell" title="$${e.url}" onclick="copyURL('$${safeUrl}')">${e.url}</span></td>
-      <td><span class="status-ready">● Ready</span></td>
-      <td>
-        <div style="display:flex;gap:4px">
-          <button class="pb-tile-btn" title="Copy URL" onclick="copyURL('${safeUrl}')">📋</button>
-          <button class="pb-tile-btn" title="Open in new tab" onclick="window.open('${safeUrl}','_blank')">↗</button>
-        </div>
-      </td>`;
-    tbody.appendChild(tr);
-  });
-
-  document.getElementById('pb-url-count').textContent=`(${generatedEntries.length} streams)`;
-  document.getElementById('pb-table-wrap').style.display='block';
-  document.getElementById('pb-play-btn').disabled=false;
+  if(!generatedEntries.length){ alert('No valid URLs could be generated for the selected Headend/Format combination.'); return; }
+  rebuildURLTable();
+  document.getElementById('pb-table-wrap').style.display = 'block';
+  document.getElementById('pb-play-btn').disabled = false;
+  savePBState();
   showToast(`✅ ${generatedEntries.length} URLs generated successfully!`);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — LAYOUT SYNC
-// ═══════════════════════════════════════════
 function syncLayoutInputs(){
-  const r = document.getElementById('pb-rows').value;
-  const c = document.getElementById('pb-cols').value;
-  const lr = document.getElementById('mv-rows-live');
-  const lc = document.getElementById('mv-cols-live');
-  if(lr) lr.value=r;
-  if(lc) lc.value=c;
-  applyGridLayout();
+  const r=document.getElementById('pb-rows').value; const c=document.getElementById('pb-cols').value;
+  const lr=document.getElementById('mv-rows-live'); const lc=document.getElementById('mv-cols-live');
+  if(lr) lr.value=r; if(lc) lc.value=c; applyGridLayout();
 }
-
 function applyGridLayout(){
-  const rows = parseInt(document.getElementById('mv-rows-live')?.value||document.getElementById('pb-rows').value)||2;
-  const cols = parseInt(document.getElementById('mv-cols-live')?.value||document.getElementById('pb-cols').value)||3;
-  const grid = document.getElementById('pb-grid');
-  grid.style.gridTemplateColumns=`repeat(${cols}, 1fr)`;
-  // Sync config inputs
-  const pr = document.getElementById('pb-rows');
-  const pc = document.getElementById('pb-cols');
-  const lr = document.getElementById('mv-rows-live');
-  const lc = document.getElementById('mv-cols-live');
-  if(pr) pr.value=rows;
-  if(pc) pc.value=cols;
-  if(lr) lr.value=rows;
-  if(lc) lc.value=cols;
+  const rows=parseInt(document.getElementById('mv-rows-live')?.value||document.getElementById('pb-rows').value)||2;
+  const cols=parseInt(document.getElementById('mv-cols-live')?.value||document.getElementById('pb-cols').value)||3;
+  const grid=document.getElementById('pb-grid');
+  grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  const pr=document.getElementById('pb-rows'); const pc=document.getElementById('pb-cols');
+  const lr=document.getElementById('mv-rows-live'); const lc=document.getElementById('mv-cols-live');
+  if(pr) pr.value=rows; if(pc) pc.value=cols; if(lr) lr.value=rows; if(lc) lc.value=cols;
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — TILE SIZE TEMPLATES
-// ═══════════════════════════════════════════
 function applyTileSize(){
-  const val = document.getElementById('pb-tile-size').value;
-  const lv  = document.getElementById('mv-size-live');
-  if(lv) lv.value=val;
+  const val=document.getElementById('pb-tile-size').value;
+  const lv=document.getElementById('mv-size-live'); if(lv) lv.value=val;
   applyTileSizeToGrid(val);
 }
 function applyTileSizeLive(){
-  const val = document.getElementById('mv-size-live').value;
-  const ps  = document.getElementById('pb-tile-size');
-  if(ps) ps.value=val;
+  const val=document.getElementById('mv-size-live').value;
+  const ps=document.getElementById('pb-tile-size'); if(ps) ps.value=val;
   applyTileSizeToGrid(val);
 }
 function applyTileSizeToGrid(val){
-  const grid = document.getElementById('pb-grid');
+  const grid=document.getElementById('pb-grid');
   if(val==='auto'){
-    grid.style.gridTemplateColumns='';
-    applyGridLayout();
-    document.querySelectorAll('.pb-tile-video-wrap').forEach(w=>{
-      w.style.paddingTop='56.25%';
-      w.style.height='';
-    });
+    grid.style.gridTemplateColumns=''; applyGridLayout();
+    document.querySelectorAll('.pb-tile-video-wrap').forEach(w=>{ w.style.paddingTop='56.25%'; w.style.height=''; });
   } else {
-    const parts = val.split('x');
-    const w = parseInt(parts[0]);
-    const h = parseInt(parts[1]);
-    const ratio = (h/w*100).toFixed(4)+'%';
-    document.querySelectorAll('.pb-tile-video-wrap').forEach(wrap=>{
-      wrap.style.paddingTop=ratio;
-    });
-    const cols = parseInt(document.getElementById('mv-cols-live')?.value||document.getElementById('pb-cols').value)||3;
-    grid.style.gridTemplateColumns=`repeat($${cols}, $${w}px)`;
+    const parts=val.split('x'); const w=parseInt(parts[0]); const h=parseInt(parts[1]);
+    const ratio=(h/w*100).toFixed(4)+'%';
+    document.querySelectorAll('.pb-tile-video-wrap').forEach(wrap=>{ wrap.style.paddingTop=ratio; });
+    const cols=parseInt(document.getElementById('mv-cols-live')?.value||document.getElementById('pb-cols').value)||3;
+    grid.style.gridTemplateColumns=`repeat(${cols},${w}px)`;
   }
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — START PLAYBACK
-// ═══════════════════════════════════════════
 function startPlayback(){
   if(!generatedEntries.length) return;
-  const delay = parseInt(document.getElementById('pb-delay').value)||0;
-
+  const delay=parseInt(document.getElementById('pb-delay').value)||0;
   document.getElementById('pb-mv-controls').style.display='flex';
   document.getElementById('pb-stop-btn').style.display='inline-flex';
-
-  const grid = document.getElementById('pb-grid');
+  const grid=document.getElementById('pb-grid');
   grid.innerHTML='';
-
-  // Apply layout
   applyGridLayout();
-
   generatedEntries.forEach((e,i)=>{
-    setTimeout(()=>{
-      const tile = createTile(e);
-      grid.appendChild(tile);
-      startHealthCheck(e);
-    }, i*delay);
+    setTimeout(()=>{ const tile=createTile(e); grid.appendChild(tile); startHealthCheck(e); },i*delay);
   });
-
   setupRefresh();
+  savePBState();
   showToast(`▶ Starting ${generatedEntries.length} streams…`);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — CREATE TILE
-// ═══════════════════════════════════════════
 function createTile(e){
-  const tile = document.createElement('div');
+  const tile=document.createElement('div');
   tile.className='pb-tile health-loading';
   tile.id=`tile-${e.idx}`;
   tile.setAttribute('draggable','true');
-  tile.setAttribute('data-channel', e.channel);
-
-  const fmtBadge = e.format==='HLS'?'badge-hls':e.format==='DASH'?'badge-dash':'badge-smooth';
-  const supBadge = e.suppressed?'<span class="pb-tile-badge badge-sup">SUP</span>':'';
-  const safeUrl  = e.url.replace(/'/g,"\\'");
-
+  tile.setAttribute('data-channel',e.channel);
+  const fmtBadge=e.format==='HLS'?'badge-hls':e.format==='DASH'?'badge-dash':'badge-smooth';
+  const supBadge=e.suppressed?'<span class="pb-tile-badge badge-sup">SUP</span>':'';
+  const safeUrl=e.url.replace(/'/g,"\\'");
   tile.innerHTML=`
     <div class="pb-tile-header">
-      <div class="pb-tile-title">
-        📺 $${e.channel} | $${e.headend}
-        <span class="pb-tile-badge $${fmtBadge}">$${e.format}</span>
-        ${supBadge}
-      </div>
+      <div class="pb-tile-title">📺 ${e.channel} | ${e.headend}<span class="pb-tile-badge ${fmtBadge}">${e.format}</span>${supBadge}</div>
       <div class="pb-tile-controls">
-        <button class="pb-tile-btn" id="mute-btn-$${e.idx}" title="Mute/Unmute" onclick="toggleMuteTile($${e.idx})">🔊</button>
-        <button class="pb-tile-btn" title="Fullscreen" onclick="fullscreenTile(${e.idx})">⛶</button>
-        <button class="pb-tile-btn" title="Copy URL" onclick="copyURL('${safeUrl}')">📋</button>
-        <button class="pb-tile-btn" title="Open in new tab" onclick="window.open('${safeUrl}','_blank')">↗</button>
-        <button class="pb-tile-btn" title="Retry stream" onclick="retryTile($${e.idx},'$${safeUrl}')">🔄</button>
-        <button class="pb-tile-btn" title="Pin tile" onclick="pinTile(${e.idx})">📌</button>
-        <button class="pb-tile-btn" title="Remove tile" onclick="removeTile(${e.idx})" style="color:var(--accent-red)">✕</button>
+        <button class="pb-tile-btn" id="mute-btn-${e.idx}" onclick="toggleMuteTile(${e.idx})">🔊</button>
+        <button class="pb-tile-btn" onclick="fullscreenTile(${e.idx})">⛶</button>
+        <button class="pb-tile-btn" onclick="copyURL('${safeUrl}')">📋</button>
+        <button class="pb-tile-btn" onclick="window.open('${safeUrl}','_blank')">↗</button>
+        <button class="pb-tile-btn" onclick="retryTile(${e.idx},'${safeUrl}')">🔄</button>
+        <button class="pb-tile-btn" onclick="pinTile(${e.idx})">📌</button>
+        <button class="pb-tile-btn" onclick="removeTile(${e.idx})" style="color:var(--accent-red)">✕</button>
       </div>
     </div>
     <div class="pb-tile-video-wrap" id="vwrap-${e.idx}" style="padding-top:56.25%">
@@ -1143,132 +1143,78 @@ function createTile(e){
       </div>
     </div>
     <div class="pb-tile-footer">
-      <div class="pb-tile-status" id="status-${e.idx}">
-        <div class="pb-tile-status-dot dot-yellow"></div>
-        <span style="color:var(--accent-dazn)">Loading…</span>
-      </div>
-      <div class="pb-tile-meta">
-        <span class="pb-tile-latency" id="latency-${e.idx}">-- ms</span>
-        <span style="font-size:10px;color:var(--text-muted)">${e.eventId.substring(0,14)}…</span>
-      </div>
+      <div class="pb-tile-status" id="status-${e.idx}"><div class="pb-tile-status-dot dot-yellow"></div><span style="color:var(--accent-dazn)">Loading…</span></div>
+      <div class="pb-tile-meta"><span class="pb-tile-latency" id="latency-${e.idx}">-- ms</span><span style="font-size:10px;color:var(--text-muted)">${e.eventId.substring(0,14)}…</span></div>
     </div>
     <div class="pb-tile-health-bar loading" id="hbar-${e.idx}"></div>`;
-
-  // Drag & Drop
   tile.addEventListener('dragstart',ev=>{
     if(!document.getElementById('pb-drag').checked) return;
-    ev.dataTransfer.setData('text/plain', tile.id);
+    ev.dataTransfer.setData('text/plain',tile.id);
     setTimeout(()=>tile.style.opacity='0.4',0);
   });
   tile.addEventListener('dragend',()=>{ tile.style.opacity='1'; });
   tile.addEventListener('dragover',ev=>{ ev.preventDefault(); tile.style.outline='2px dashed var(--accent-blue)'; });
   tile.addEventListener('dragleave',()=>{ tile.style.outline=''; });
   tile.addEventListener('drop',ev=>{
-    ev.preventDefault();
-    tile.style.outline='';
-    const dragId = ev.dataTransfer.getData('text/plain');
-    const dragEl = document.getElementById(dragId);
-    const grid   = document.getElementById('pb-grid');
-    if(dragEl && dragEl!==tile){
-      const all      = [...grid.querySelectorAll('.pb-tile')];
-      const dragIdx  = all.indexOf(dragEl);
-      const dropIdx  = all.indexOf(tile);
-      if(dragIdx < dropIdx) tile.after(dragEl);
-      else tile.before(dragEl);
+    ev.preventDefault(); tile.style.outline='';
+    const dragId=ev.dataTransfer.getData('text/plain');
+    const dragEl=document.getElementById(dragId);
+    const grid=document.getElementById('pb-grid');
+    if(dragEl&&dragEl!==tile){
+      const all=[...grid.querySelectorAll('.pb-tile')];
+      if(all.indexOf(dragEl)<all.indexOf(tile)) tile.after(dragEl); else tile.before(dragEl);
     }
   });
-
-  // Load stream after short delay
-  setTimeout(()=>loadStream(e.idx, e.url, e.format), 400);
-
-  // Apply current tile size
-  const sizeVal = document.getElementById('pb-tile-size').value;
+  setTimeout(()=>loadStream(e.idx,e.url,e.format),400);
+  const sizeVal=document.getElementById('pb-tile-size').value;
   if(sizeVal!=='auto'){
-    const parts = sizeVal.split('x');
-    const w = parseInt(parts[0]);
-    const h = parseInt(parts[1]);
-    tile.querySelector('.pb-tile-video-wrap').style.paddingTop=(h/w*100).toFixed(4)+'%';
+    const parts=sizeVal.split('x');
+    tile.querySelector('.pb-tile-video-wrap').style.paddingTop=(parseInt(parts[1])/parseInt(parts[0])*100).toFixed(4)+'%';
   }
-
   return tile;
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — LOAD STREAM
-// ═══════════════════════════════════════════
-function loadStream(idx, url, format){
-  const wrap        = document.getElementById(`vwrap-${idx}`);
-  const placeholder = document.getElementById(`placeholder-${idx}`);
+function loadStream(idx,url,format){
+  const wrap=document.getElementById(`vwrap-${idx}`);
+  const placeholder=document.getElementById(`placeholder-${idx}`);
   if(!wrap) return;
-
-  // Remove old video if exists
-  const old = document.getElementById(`video-${idx}`);
-  if(old){ old.pause(); old.src=''; old.remove(); }
-
-  const video = document.createElement('video');
-  video.id          = `video-${idx}`;
-  video.controls    = true;
-  video.muted       = true;
-  video.autoplay    = true;
-  video.playsInline = true;
-  video.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#000';
-
-  const t0 = Date.now();
-
+  const old=document.getElementById(`video-${idx}`);
+  if(old){ if(old._hls) old._hls.destroy(); if(old._dashPlayer) old._dashPlayer.reset(); old.pause(); old.src=''; old.remove(); }
+  const video=document.createElement('video');
+  video.id=`video-${idx}`; video.controls=true; video.muted=true; video.autoplay=true; video.playsInline=true;
+  video.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#000';
+  const t0=Date.now();
   video.addEventListener('playing',()=>{
     setTileHealth(idx,'good');
-    const lat = Date.now()-t0;
-    const latEl = document.getElementById(`latency-${idx}`);
-    if(latEl) latEl.textContent = lat+'ms';
+    const latEl=document.getElementById(`latency-${idx}`);
+    if(latEl) latEl.textContent=(Date.now()-t0)+'ms';
     if(placeholder) placeholder.style.display='none';
   });
   video.addEventListener('error',()=>setTileHealth(idx,'bad'));
   video.addEventListener('stalled',()=>setTileHealth(idx,'loading'));
   video.addEventListener('waiting',()=>setTileHealth(idx,'loading'));
-
   wrap.appendChild(video);
-
   if(format==='HLS'){
-    if(window.Hls && Hls.isSupported()){
-      const hls = new Hls({enableWorker:true, lowLatencyMode:true});
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.ERROR,(ev,data)=>{
-        if(data.fatal) setTileHealth(idx,'bad');
-      });
-      video._hls = hls;
-    } else if(video.canPlayType('application/vnd.apple.mpegurl')){
-      video.src = url;
-    } else {
+    if(window.Hls&&Hls.isSupported()){
+      const hls=new Hls({enableWorker:true,lowLatencyMode:true});
+      hls.loadSource(url); hls.attachMedia(video);
+      hls.on(Hls.Events.ERROR,(ev,data)=>{ if(data.fatal) setTileHealth(idx,'bad'); });
+      video._hls=hls;
+    } else if(video.canPlayType('application/vnd.apple.mpegurl')){ video.src=url; }
+    else {
       setTileHealth(idx,'bad');
-      if(placeholder){
-        placeholder.innerHTML=`<div class="pb-tile-placeholder-icon">⚠️</div><div class="pb-tile-placeholder-text">HLS.js not loaded.<br>Click ↗ to open in new tab.</div>`;
-        placeholder.style.display='flex';
-      }
+      if(placeholder){ placeholder.innerHTML=`<div class="pb-tile-placeholder-icon">⚠️</div><div class="pb-tile-placeholder-text">HLS.js not loaded.<br>Click ↗ to open in new tab.</div>`; placeholder.style.display='flex'; }
       return;
     }
   } else if(format==='DASH'){
-    if(window.dashjs){
-      const player = dashjs.MediaPlayer().create();
-      player.initialize(video, url, true);
-      video._dashPlayer = player;
-    } else {
-      video.src = url;
-    }
-  } else {
-    video.src = url;
-  }
-
+    if(window.dashjs){ const player=dashjs.MediaPlayer().create(); player.initialize(video,url,true); video._dashPlayer=player; }
+    else video.src=url;
+  } else { video.src=url; }
   video.play().catch(()=>{});
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — HEALTH
-// ═══════════════════════════════════════════
-function setTileHealth(idx, state){
-  const tile   = document.getElementById(`tile-${idx}`);
-  const status = document.getElementById(`status-${idx}`);
-  const hbar   = document.getElementById(`hbar-${idx}`);
+function setTileHealth(idx,state){
+  const tile=document.getElementById(`tile-${idx}`);
+  const status=document.getElementById(`status-${idx}`);
+  const hbar=document.getElementById(`hbar-${idx}`);
   if(!tile) return;
   tile.classList.remove('health-good','health-bad','health-loading');
   if(state==='good'){
@@ -1285,106 +1231,74 @@ function setTileHealth(idx, state){
     if(hbar){ hbar.classList.add('loading'); hbar.classList.remove('bad'); }
   }
 }
-
 function startHealthCheck(e){
-  const interval = parseInt(document.getElementById('pb-health-interval').value)||30;
+  const interval=parseInt(document.getElementById('pb-health-interval').value)||30;
   if(interval===0) return;
-  const timer = setInterval(()=>{
-    const video = document.getElementById(`video-${e.idx}`);
+  const timer=setInterval(()=>{
+    const video=document.getElementById(`video-${e.idx}`);
     if(!video){ clearInterval(timer); return; }
-    if(video.error || video.ended) setTileHealth(e.idx,'bad');
+    if(video.error||video.ended) setTileHealth(e.idx,'bad');
     else if(video.paused) setTileHealth(e.idx,'loading');
     else if(video.readyState>=3) setTileHealth(e.idx,'good');
     else setTileHealth(e.idx,'loading');
-  }, interval*1000);
+  },interval*1000);
   healthTimers.push(timer);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — TILE CONTROLS
-// ═══════════════════════════════════════════
 function toggleMuteTile(idx){
-  const video = document.getElementById(`video-${idx}`);
-  const btn   = document.getElementById(`mute-btn-${idx}`);
+  const video=document.getElementById(`video-${idx}`);
+  const btn=document.getElementById(`mute-btn-${idx}`);
   if(!video) return;
-  video.muted = !video.muted;
-  if(btn) btn.textContent = video.muted ? '🔇' : '🔊';
+  video.muted=!video.muted;
+  if(btn) btn.textContent=video.muted?'🔇':'🔊';
 }
-
 function fullscreenTile(idx){
-  const wrap = document.getElementById(`vwrap-${idx}`);
+  const wrap=document.getElementById(`vwrap-${idx}`);
   if(!wrap) return;
-  if(document.fullscreenElement){
-    document.exitFullscreen();
-  } else {
-    if(wrap.requestFullscreen) wrap.requestFullscreen();
-    else if(wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
-  }
+  if(document.fullscreenElement) document.exitFullscreen();
+  else if(wrap.requestFullscreen) wrap.requestFullscreen();
+  else if(wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
 }
-
-function retryTile(idx, url){
-  const entry = generatedEntries.find(e=>e.idx===idx);
+function retryTile(idx,url){
+  const entry=generatedEntries.find(e=>e.idx===idx);
   if(!entry) return;
   setTileHealth(idx,'loading');
-  const placeholder = document.getElementById(`placeholder-${idx}`);
-  if(placeholder){
-    placeholder.innerHTML=`<div class="pb-tile-placeholder-icon">⏳</div><div class="pb-tile-placeholder-text">Retrying…</div>`;
-    placeholder.style.display='flex';
-  }
-  setTimeout(()=>loadStream(idx, url, entry.format), 600);
+  const ph=document.getElementById(`placeholder-${idx}`);
+  if(ph){ ph.innerHTML=`<div class="pb-tile-placeholder-icon">⏳</div><div class="pb-tile-placeholder-text">Retrying…</div>`; ph.style.display='flex'; }
+  setTimeout(()=>loadStream(idx,url,entry.format),600);
 }
-
 function pinTile(idx){
-  const tile = document.getElementById(`tile-${idx}`);
+  const tile=document.getElementById(`tile-${idx}`);
   if(tile) tile.classList.toggle('pinned');
 }
-
 function removeTile(idx){
-  const tile  = document.getElementById(`tile-${idx}`);
-  const video = document.getElementById(`video-${idx}`);
-  if(video){
-    if(video._hls){ video._hls.destroy(); }
-    if(video._dashPlayer){ video._dashPlayer.reset(); }
-    video.pause(); video.src='';
-  }
+  const tile=document.getElementById(`tile-${idx}`);
+  const video=document.getElementById(`video-${idx}`);
+  if(video){ if(video._hls) video._hls.destroy(); if(video._dashPlayer) video._dashPlayer.reset(); video.pause(); video.src=''; }
   if(tile) tile.remove();
-  generatedEntries = generatedEntries.filter(e=>e.idx!==idx);
+  generatedEntries=generatedEntries.filter(e=>e.idx!==idx);
+  localStorage.setItem(LS_PB_ENTRIES,JSON.stringify(generatedEntries));
   if(!document.getElementById('pb-grid').querySelector('.pb-tile')){
     document.getElementById('pb-grid').innerHTML=`<div class="pb-empty"><div class="pb-empty-icon">▶️</div><div class="pb-empty-title">All tiles removed</div><div class="pb-empty-sub">Generate new URLs and start playback.</div></div>`;
     document.getElementById('pb-mv-controls').style.display='none';
   }
 }
-
-function muteAllTiles(){
-  document.querySelectorAll('#pb-grid video').forEach(v=>{ v.muted=true; });
-  document.querySelectorAll('[id^="mute-btn-"]').forEach(b=>{ b.textContent='🔇'; });
-}
-function unmuteAllTiles(){
-  document.querySelectorAll('#pb-grid video').forEach(v=>{ v.muted=false; });
-  document.querySelectorAll('[id^="mute-btn-"]').forEach(b=>{ b.textContent='🔊'; });
-}
-function toggleMuteAll(){
-  const checked = document.getElementById('pb-mute-all').checked;
-  if(checked) muteAllTiles(); else unmuteAllTiles();
-}
+function muteAllTiles(){ document.querySelectorAll('#pb-grid video').forEach(v=>{ v.muted=true; }); document.querySelectorAll('[id^="mute-btn-"]').forEach(b=>{ b.textContent='🔇'; }); }
+function unmuteAllTiles(){ document.querySelectorAll('#pb-grid video').forEach(v=>{ v.muted=false; }); document.querySelectorAll('[id^="mute-btn-"]').forEach(b=>{ b.textContent='🔊'; }); }
+function toggleMuteAll(){ const checked=document.getElementById('pb-mute-all').checked; if(checked) muteAllTiles(); else unmuteAllTiles(); }
 function fullscreenGrid(){
-  const grid = document.getElementById('pb-grid');
-  if(document.fullscreenElement){ document.exitFullscreen(); }
+  const grid=document.getElementById('pb-grid');
+  if(document.fullscreenElement) document.exitFullscreen();
   else if(grid.requestFullscreen) grid.requestFullscreen();
   else if(grid.webkitRequestFullscreen) grid.webkitRequestFullscreen();
 }
 function stopAll(){
-  document.querySelectorAll('#pb-grid video').forEach(v=>{
-    if(v._hls){ v._hls.destroy(); }
-    if(v._dashPlayer){ v._dashPlayer.reset(); }
-    v.pause(); v.src='';
-  });
-  healthTimers.forEach(t=>clearInterval(t));
-  healthTimers=[];
+  document.querySelectorAll('#pb-grid video').forEach(v=>{ if(v._hls) v._hls.destroy(); if(v._dashPlayer) v._dashPlayer.reset(); v.pause(); v.src=''; });
+  healthTimers.forEach(t=>clearInterval(t)); healthTimers=[];
   if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; }
   document.getElementById('pb-grid').innerHTML=`<div class="pb-empty"><div class="pb-empty-icon">⏹</div><div class="pb-empty-title">Playback Stopped</div><div class="pb-empty-sub">Click <strong>▶ Start Playback</strong> to resume.</div></div>`;
   document.getElementById('pb-mv-controls').style.display='none';
   document.getElementById('pb-stop-btn').style.display='none';
+  savePBState();
 }
 function clearAll(){
   stopAll();
@@ -1395,175 +1309,154 @@ function clearAll(){
   document.getElementById('suppressed-indicator').classList.remove('visible');
   document.getElementById('pb-suppressed').checked=false;
   generatedEntries=[];
+  // FIX #3: Only clearAll removes localStorage PB state
+  localStorage.removeItem(LS_PB_STATE);
+  localStorage.removeItem(LS_PB_ENTRIES);
   document.getElementById('pb-grid').innerHTML=`<div class="pb-empty"><div class="pb-empty-icon">▶️</div><div class="pb-empty-title">No Streams Playing</div><div class="pb-empty-sub">Paste your Channel Numbers &amp; Event IDs above, select Headend &amp; Format, then click <strong>⚡ Generate Playback URLs</strong> followed by <strong>▶ Start Playback</strong>.</div></div>`;
+  showToast('🗑️ Playback cleared!');
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — FILTER TILES
-// ═══════════════════════════════════════════
 function filterTiles(query){
-  const q = query.toLowerCase().trim();
+  const q=query.toLowerCase().trim();
   document.querySelectorAll('.pb-tile').forEach(tile=>{
-    const ch  = (tile.getAttribute('data-channel')||'').toLowerCase();
-    const txt = tile.innerText.toLowerCase();
+    const ch=(tile.getAttribute('data-channel')||'').toLowerCase();
+    const txt=tile.innerText.toLowerCase();
     tile.style.display=(q===''||ch.includes(q)||txt.includes(q))?'':'none';
   });
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — REFRESH INTERVAL (10s to 5min)
-// ═══════════════════════════════════════════
 function setupRefresh(){
   if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; }
-  const secs = parseInt(document.getElementById('pb-refresh').value)||0;
+  const secs=parseInt(document.getElementById('pb-refresh').value)||0;
   if(secs===0) return;
-  refreshTimer = setInterval(()=>{
-    generatedEntries.forEach(e=>{
-      retryTile(e.idx, e.url);
-    });
-    showToast('🔄 Streams refreshed');
-  }, secs*1000);
+  refreshTimer=setInterval(()=>{ generatedEntries.forEach(e=>retryTile(e.idx,e.url)); showToast('🔄 Streams refreshed'); },secs*1000);
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — CSV EXPORT (no headers, Channel,URL only)
-// ═══════════════════════════════════════════
 function exportCSV(){
   if(!generatedEntries.length){ alert('Generate URLs first.'); return; }
-  // Format: ChannelNumber,PlaybackURL — NO headers, NO extra columns
-  const rows = generatedEntries.map(e=>`${e.channel},${e.url}`);
-  const blob = new Blob([rows.join('\n')],{type:'text/csv'});
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = `dazn-playback-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const rows=generatedEntries.map(e=>`${e.channel},${e.url}`);
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`dazn-playback-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(a.href);
   showToast('📥 CSV exported successfully!');
 }
-
-// ═══════════════════════════════════════════
-// PLAYBACK — COPY URL
-// ═══════════════════════════════════════════
 function copyURL(url){
-  navigator.clipboard.writeText(url).then(()=>{
-    showToast('📋 URL copied to clipboard!');
-  }).catch(()=>{
-    const ta = document.createElement('textarea');
-    ta.value=url; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta);
+  navigator.clipboard.writeText(url).then(()=>showToast('📋 URL copied to clipboard!')).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
     showToast('📋 URL copied!');
   });
 }
-function copyAllURLs(){
-  if(!generatedEntries.length) return;
-  copyURL(generatedEntries.map(e=>e.url).join('\n'));
-}
-
-// ═══════════════════════════════════════════
-// PLAYBACK — SHARE SESSION (single link, all tiles)
-// ═══════════════════════════════════════════
+function copyAllURLs(){ if(!generatedEntries.length) return; copyURL(generatedEntries.map(e=>e.url).join('\n')); }
 function sharePlayback(){
   if(!generatedEntries.length){ alert('Generate URLs first.'); return; }
-  const rows    = document.getElementById('pb-rows').value;
-  const cols    = document.getElementById('pb-cols').value;
-  const session = {
-    headend   : document.getElementById('pb-headend').value,
-    format    : document.getElementById('pb-format').value,
-    suppressed: document.getElementById('pb-suppressed').checked,
-    rows, cols,
-    tileSize  : document.getElementById('pb-tile-size').value,
-    entries   : generatedEntries.map(e=>({channel:e.channel, eventId:e.eventId}))
+  const session={
+    headend:document.getElementById('pb-headend').value,
+    format:document.getElementById('pb-format').value,
+    suppressed:document.getElementById('pb-suppressed').checked,
+    rows:document.getElementById('pb-rows').value,
+    cols:document.getElementById('pb-cols').value,
+    tileSize:document.getElementById('pb-tile-size').value,
+    entries:generatedEntries.map(e=>({channel:e.channel,eventId:e.eventId}))
   };
-  const encoded  = btoa(unescape(encodeURIComponent(JSON.stringify(session))));
-  const shareURL = window.location.href.split('?')[0]+'?pbsession='+encoded;
-  document.getElementById('share-url-input').value = shareURL;
+  const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(session))));
+  const shareURL=window.location.href.split('?')[0]+'?pbsession='+encoded;
+  document.getElementById('share-url-input').value=shareURL;
   document.getElementById('share-box').style.display='block';
   document.getElementById('share-box').scrollIntoView({behavior:'smooth'});
   showToast('🔗 Shareable link generated!');
 }
-function copyShareURL(){
-  copyURL(document.getElementById('share-url-input').value);
-}
-
-// ═══════════════════════════════════════════
-// PLAYBACK — LOAD SHARED SESSION
-// ═══════════════════════════════════════════
+function copyShareURL(){ copyURL(document.getElementById('share-url-input').value); }
 function checkSharedSession(){
   if(sharedSessionChecked) return;
-  sharedSessionChecked = true;
-  const params  = new URLSearchParams(window.location.search);
-  const session = params.get('pbsession');
+  sharedSessionChecked=true;
+  const params=new URLSearchParams(window.location.search);
+  const session=params.get('pbsession');
   if(!session) return;
   try{
-    const data = JSON.parse(decodeURIComponent(escape(atob(session))));
-    if(data.headend) document.getElementById('pb-headend').value = data.headend;
-    onHeadendChange();
-    if(data.format)  document.getElementById('pb-format').value  = data.format;
-    if(data.suppressed){
-      document.getElementById('pb-suppressed').checked = true;
-      toggleSuppressed();
-    }
-    if(data.rows){ document.getElementById('pb-rows').value = data.rows; }
-    if(data.cols){ document.getElementById('pb-cols').value = data.cols; }
-    if(data.tileSize){ document.getElementById('pb-tile-size').value = data.tileSize; }
-    if(data.entries && data.entries.length){
-      const lines = data.entries.map(e=>`${e.channel}\t${e.eventId}`).join('\n');
-      document.getElementById('pb-input').value = lines;
+    const data=JSON.parse(decodeURIComponent(escape(atob(session))));
+    if(data.headend){ document.getElementById('pb-headend').value=data.headend; onHeadendChange(); }
+    if(data.format) document.getElementById('pb-format').value=data.format;
+    if(data.suppressed){ document.getElementById('pb-suppressed').checked=true; toggleSuppressed(); }
+    if(data.rows) document.getElementById('pb-rows').value=data.rows;
+    if(data.cols) document.getElementById('pb-cols').value=data.cols;
+    if(data.tileSize) document.getElementById('pb-tile-size').value=data.tileSize;
+    if(data.entries&&data.entries.length){
+      const lines=data.entries.map(e=>`${e.channel}\t${e.eventId}`).join('\n');
+      document.getElementById('pb-input').value=lines;
       showToast('🔗 Shared session loaded! Generating URLs…');
-      setTimeout(()=>{
-        generateURLs();
-        setTimeout(()=>startPlayback(), 800);
-      }, 600);
+      setTimeout(()=>{ generateURLs(); setTimeout(()=>startPlayback(),800); },600);
     }
-  } catch(err){
-    console.warn('Invalid shared session:', err);
-  }
+  } catch(err){ console.warn('Invalid shared session:',err); }
 }
 
 // ═══════════════════════════════════════════
-// TOAST NOTIFICATION
+// TOAST
 // ═══════════════════════════════════════════
 function showToast(msg){
-  let toast = document.getElementById('dz-toast');
+  let toast=document.getElementById('dz-toast');
   if(!toast){
-    toast = document.createElement('div');
-    toast.id = 'dz-toast';
-    toast.style.cssText=`position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--accent-green);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;max-width:320px;`;
+    toast=document.createElement('div');
+    toast.id='dz-toast';
+    toast.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--accent-green);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none;max-width:320px;';
     document.body.appendChild(toast);
   }
-  toast.textContent = msg;
+  toast.textContent=msg;
   toast.style.opacity='1';
   clearTimeout(toast._timer);
-  toast._timer = setTimeout(()=>{ toast.style.opacity='0'; }, 2800);
+  toast._timer=setTimeout(()=>{ toast.style.opacity='0'; },2800);
 }
 
 // ═══════════════════════════════════════════
-// LOAD HLS.JS + DASH.JS DYNAMICALLY
+// UTILITY — HTML escape
+// ═══════════════════════════════════════════
+function escHtml(str){
+  if(!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+// ═══════════════════════════════════════════
+// LOAD HLS.JS + DASH.JS
 // ═══════════════════════════════════════════
 (function loadPlayerLibs(){
   if(!window.Hls){
-    const s = document.createElement('script');
-    s.src   = 'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
-    s.async = true;
-    document.head.appendChild(s);
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
+    s.async=true; document.head.appendChild(s);
   }
   if(!window.dashjs){
-    const s = document.createElement('script');
-    s.src   = 'https://cdn.dashjs.org/latest/dash.all.min.js';
-    s.async = true;
-    document.head.appendChild(s);
+    const s=document.createElement('script');
+    s.src='https://cdn.dashjs.org/latest/dash.all.min.js';
+    s.async=true; document.head.appendChild(s);
   }
 })();
 
 // ═══════════════════════════════════════════
-// INIT — AUTO SWITCH TO PLAYBACK IF SHARED SESSION
+// INIT — page load
 // ═══════════════════════════════════════════
 window.addEventListener('load',()=>{
-  const params = new URLSearchParams(window.location.search);
+
+  // 1. Restore theme
+  const savedTheme=localStorage.getItem(LS_THEME);
+  if(savedTheme) applyTheme(savedTheme);
+
+  // 2. FIX #1: Restore manually added tools from localStorage
+  restoreManualTools();
+
+  // 3. FIX #3: Restore playback state
+  restorePBState();
+
+  // 4. Check for shared session in URL — auto switch to playback
+  const params=new URLSearchParams(window.location.search);
   if(params.get('pbsession')){
-    const pbBtn = document.querySelectorAll('.tab-btn')[1];
-    if(pbBtn) switchTab('playback', pbBtn);
+    const pbBtn=document.getElementById('tab-btn-playback');
+    if(pbBtn) switchTab('playback',pbBtn);
+  } else {
+    // 5. FIX #3: Restore last active tab — stays on playback after refresh
+    restoreActiveTab();
   }
 });
 </script>
